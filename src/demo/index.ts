@@ -80,4 +80,6 @@ demo(paciente);
 function demo(patient) {
     let rta = Patient.encode(patient);
     // console.log(rta);
+    let newRta = Patient.decode(rta);
+    console.log('Rtanew: ', newRta);
 }

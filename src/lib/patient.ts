@@ -159,8 +159,8 @@ export function decode(patient) {
 
     let pacienteAndes = {
         documento: patient.identifier[0].value, // suponemos que como identificador en la primer posición nos envían el dni (Consensuar)
-        nombre: patient.name[0].given.join().replace(',', ' '),
-        apellido: patient.name[0].family.join().replace(',', ' '),
+        nombre: patient.name[0].given.replace(',', ' '),
+        apellido: patient.name[0].family.replace(',', ' '),
         fechaNacimiento: patient.birthDate,
         genero,
         sexo,
