@@ -89,8 +89,8 @@ demo(paciente);
 
 function demo(patient) {
     let rta = Patient.encode(patient);
-    console.log('Usuario codificado: ', rta);
+    // console.log('Usuario codificado: ', rta);
     // console.log(rta);
     let newRta = Patient.decode(rta);
-    console.log('Rtanew: ', newRta);
+    // console.log('Rtanew: ', newRta);
 }
