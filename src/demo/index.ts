@@ -23,7 +23,17 @@ let objeto = {
             '098064'
         ],
         financiador: [],
-        relaciones: [],
+        relaciones: [
+            {
+                relacion: {
+                    nombre: 'hijo / a',
+                    opuesto: 'progenitor / a'
+                },
+                nombre: 'JOSEFINA',
+                apellido: 'PERINGA PONCE',
+                documento: '53964567'
+            }
+        ],
         direccion: [
             {
                 valor: 'SIN ESPECIFICAR MZ: 33',
@@ -79,6 +89,7 @@ demo(paciente);
 
 function demo(patient) {
     let rta = Patient.encode(patient);
+    console.log('Usuario codificado: ', rta);
     // console.log(rta);
     let newRta = Patient.decode(rta);
     console.log('Rtanew: ', newRta);

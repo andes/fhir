@@ -57,7 +57,7 @@ export function encode(patient) {
         let relaciones = data.relaciones ? data.relaciones.map(unaRelacion => {
             let relacion = {
                 relationship: [{
-                    text: unaRelacion.relacion.nombre
+                    text: unaRelacion.relacion.nombre ? unaRelacion.relacion.nombre : null,
                 }], // The kind of relationship
                 name: {
                     resourceType: 'HumanName',
@@ -161,7 +161,7 @@ export function decode(patient) {
         documento: patient.identifier[0].value, // suponemos que como identificador en la primer posición nos envían el dni (Consensuar)
         nombre: patient.name[0].given.replace(',', ' '),
         apellido: patient.name[0].family.replace(',', ' '),
-        fechaNacimiento: patient.birthDate,
+        fechaNacimiento: patient.birthDate ? patient.birthDate : null,
         genero,
         sexo,
         estado: 'temporal' // Todos los pacientes que recibimos por Fhir son considerados temporales en su conversión.
@@ -219,7 +219,7 @@ export function decode(patient) {
         let dir = {
             activo: true,
             valor: unaDireccion.line,
-            codigoPostal: unaDireccion.postalCode,
+            codigoPostal: unaDireccion.postalCode ? unaDireccion.postalCode : null,
             // TODO: En un MATETIME ver si la información de pais, provincia, localidad
             // se delega en el insert o update. Y este decoder sólo guarda la info tal cual viene.
             ubicacion: {
