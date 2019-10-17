@@ -1,28 +1,31 @@
 
+import { getDominio, makeUrl } from './config';
+
 /**
  * Encode a patient from ANDES to FHIR
  * @param {} patient
  */
 export function encode(patient) {
-    let data = patient;
-    if (data) {
-
-        let identificadores = data.documento ? [{
-            assigner: 'DU',
-            value: data.documento
-        }] : [];
-        if (data.cuil) {
+    if (patient) {
+        const identificadores = [];
+        if (patient.documento) {
             identificadores.push({
-                assigner: 'CUIL',
-                value: data.cuil
+                system: 'http://www.renaper.gob.ar/dni',
+                value: patient.documento
             });
         }
+        // if (patient.cuil) {
+        //     identificadores.push({
+        //         system: 'http://www.renaper.gob.ar/cuil',
+        //         value: patient.cuil
+        //     });
+        // }
         identificadores.push({
-            assigner: 'andes',
-            value: data._id
+            system: getDominio(),
+            value: patient._id
         });
         // Parsea contactos
-        let contactos = data.contacto ? data.contacto.map(unContacto => {
+        let contactos = patient.contacto ? patient.contacto.filter(c => c.valor).map(unContacto => {
             let cont = {
                 resourceType: 'ContactPoint',
                 value: unContacto.valor,
@@ -42,7 +45,7 @@ export function encode(patient) {
             return cont;
         }) : [];
         // Parsea direcciones
-        let direcciones = data.direccion ? data.direccion.map(unaDireccion => {
+        let direcciones = patient.direccion ? patient.direccion.filter(dir => dir.ubicacion.localidad).map(unaDireccion => {
             let direc = {
                 resourceType: 'Address',
                 postalCode: unaDireccion.codigoPostal ? unaDireccion.codigoPostal : '',
@@ -54,10 +57,10 @@ export function encode(patient) {
             return direc;
         }) : [];
         // Parsea relaciones
-        let relaciones = data.relaciones ? data.relaciones.map(unaRelacion => {
+        let relaciones = patient.relaciones ? patient.relaciones.map(unaRelacion => {
             let relacion = {
                 relationship: [{
-                    text: unaRelacion.relacion.nombre ? unaRelacion.relacion.nombre : null,
+                    text: unaRelacion.relacion.nombre
                 }], // The kind of relationship
                 name: {
                     resourceType: 'HumanName',
@@ -68,7 +71,7 @@ export function encode(patient) {
             return relacion;
         }) : [];
         let genero;
-        switch (data.genero) {
+        switch (patient.genero) {
             case 'femenino':
                 genero = 'female';
                 break;
@@ -79,22 +82,36 @@ export function encode(patient) {
                 genero = 'other';
                 break;
         }
-        let pacienteFHIR = {
+        let pacienteFHIR: any = {
+            id: patient.id,
             resourceType: 'Patient',
             identifier: identificadores,
-            active: data.activo ? data.activo : null, // Whether this patient's record is in active use
+            active: patient.activo ? patient.activo : null, // Whether this patient's record is in active use
             name: [{
+                use: 'official',
                 resourceType: 'HumanName',
-                family: data.apellido, // Family name (often called 'Surname')
-                given: data.nombre, // Given names (not always 'first'). Includes middle names
+                family: patient.apellido,
+                given: patient.nombre,
+                text: `${patient.nombre} ${patient.apellido}`,
+                _family: {
+                    extension: [
+                        {
+                            url: 'http://hl7.org/fhir/StructureDefinition/humanname-fathers-family',
+                            valueString: patient.apellido
+                        },
+                    ]
+                },
+                // [TODO] Confirmar si va el _family
             }],
             gender: genero, // male | female | other | unknown
-            birthDate: data.fechaNacimiento,
-            deceasedDateTime: data.fechaFallecimiento ? data.fechaFallecimiento : null,
+            birthDate: patient.fechaNacimiento.toISOString().slice(0, 10),
         };
-        if (data.estadoCivil) {
+        if (patient.fechaFallecimiento) {
+            pacienteFHIR.deceasedDateTime = patient.fechaFallecimiento.toISOString().slice(0, 10);
+        }
+        if (patient.estadoCivil) {
             let estadoCivil;
-            switch (data.estadoCivil) {
+            switch (patient.estadoCivil) {
                 case 'casado':
                     estadoCivil = 'Married';
                     break;
@@ -115,9 +132,9 @@ export function encode(patient) {
                 text: estadoCivil
             };
         }
-        if (data.foto) { // Image of the patient
+        if (patient.foto) { // Image of the patient
             pacienteFHIR['photo'] = [{
-                data: data.foto
+                patient: patient.foto
             }];
         }
         if (contactos.length > 0) { // A contact detail for the individual
@@ -134,6 +151,7 @@ export function encode(patient) {
         return null;
     }
 }
+
 /**
  * Decode a patient from FHIR to ANDES
  * @param {} patient
@@ -156,12 +174,18 @@ export function decode(patient) {
             sexo = 'otro';
             break;
     }
-
+    function getValue(items, key) {
+        const element = items.find(el => el.system === key);
+        if (element) {
+            return element.value;
+        }
+    }
     let pacienteAndes = {
-        documento: patient.identifier[0].value, // suponemos que como identificador en la primer posición nos envían el dni (Consensuar)
+        id: getValue(patient.identifier, makeUrl('Patient')),
+        documento: getValue(patient.identifier, 'http://www.renaper.gob.ar/dni'),
         nombre: patient.name[0].given.join().replace(',', ' '),
         apellido: patient.name[0].family.join().replace(',', ' '),
-        fechaNacimiento: patient.birthDate ? patient.birthDate : null,
+        fechaNacimiento: patient.birthDate,
         genero,
         sexo,
         estado: 'temporal' // Todos los pacientes que recibimos por Fhir son considerados temporales en su conversión.
@@ -219,7 +243,7 @@ export function decode(patient) {
         let dir = {
             activo: true,
             valor: unaDireccion.line,
-            codigoPostal: unaDireccion.postalCode ? unaDireccion.postalCode : null,
+            codigoPostal: unaDireccion.postalCode,
             // TODO: En un MATETIME ver si la información de pais, provincia, localidad
             // se delega en el insert o update. Y este decoder sólo guarda la info tal cual viene.
             ubicacion: {
@@ -261,41 +285,15 @@ export function verify(patient) {
         respuesta = ('resourceType' in patient) && patient.resourceType === 'Patient';
         respuesta = respuesta && ('identifier' in patient);
         if (patient.identifier.length > 0) {
-            patient.identifier.forEach(anIdentifier => {
-                respuesta = respuesta && Object.keys(anIdentifier).every(identifierFields);
-                if (anIdentifier.assigner) {
-                    respuesta = respuesta && typeof anIdentifier.assigner === 'string';
-                }
-                if (anIdentifier.value) {
-                    respuesta = respuesta && typeof anIdentifier.value === 'string';
-                }
-            });
+            patient.identifier.forEach(anIdentifier => respuesta = respuesta && Object.keys(anIdentifier).every(identifierFields));
 
         }
-        patient.name.forEach(aName => {
-            respuesta = respuesta && validName(aName);
-        });
+        patient.name.forEach(aName => respuesta = respuesta && validName(aName));
         if (patient.active) {
             respuesta = respuesta && (typeof patient.active === 'boolean');
         }
         if (patient.telecom) {
-            patient.telecom.forEach(aTelecom => {
-                respuesta = respuesta && Object.keys(aTelecom).every(telecomFields);
-                respuesta = respuesta && ('resourceType' in aTelecom) && aTelecom.resourceType === 'ContactPoint';
-                if (aTelecom.value) {
-                    respuesta = respuesta && typeof aTelecom.value === 'string';
-                }
-                if (aTelecom.rank) {
-                    respuesta = respuesta && typeof aTelecom.rank === 'number';
-                }
-                if (aTelecom.system) {
-                    respuesta = respuesta && typeof aTelecom.system === 'string' &&
-                        aTelecom.system.match('phone|fax|email|pager|url|sms|other') != null;
-                }
-                if (aTelecom.use) {
-                    respuesta = respuesta && typeof aTelecom.use === 'string';
-                }
-            });
+            patient.telecom.forEach(aTelecom => respuesta = respuesta && Object.keys(aTelecom).every(telecomFields));
         }
         if (patient.gender) {
             respuesta = respuesta && patient.gender.match('male|female|other|unknown') != null;
@@ -307,24 +305,7 @@ export function verify(patient) {
             respuesta = respuesta && typeof patient.deceasedDateTime === 'string'; // TODO: Algun control de que tenga formato DateTime
         }
         if (patient.address) {
-            patient.address.forEach(anAddress => {
-                respuesta = respuesta && Object.keys(anAddress).every(addressFields);
-                if (anAddress.resourceType) {
-                    respuesta = respuesta && anAddress.resourceType === 'Address';
-                }
-                if (anAddress.postalCode) {
-                    respuesta = respuesta && typeof anAddress.postalCode === 'string';
-                }
-                if (anAddress.line) {
-                    respuesta = respuesta && anAddress.line.every(areStrings);
-                }
-                if (anAddress.city) {
-                    respuesta = respuesta && typeof anAddress.city === 'string';
-                }
-                if (anAddress.state) {
-                    respuesta = respuesta && typeof anAddress.state === 'string';
-                }
-            });
+            patient.address.forEach(anAddress => respuesta = respuesta && Object.keys(anAddress).every(addressFields));
         }
         if (patient.maritalStatus && patient.maritalStatus.text) {
             respuesta = respuesta && Object.keys(patient.maritalStatus).every(codingFields)
@@ -332,19 +313,12 @@ export function verify(patient) {
                 && patient.maritalStatus.text.match('Married|Divorced|Widowed|unmarried|unknown') != null;
         }
         if (patient.photo) {
-            patient.photo.forEach(aPhoto => {
-                respuesta = respuesta && Object.keys(aPhoto).every(photoFields);
-                if (aPhoto.data) {
-                    respuesta = respuesta && typeof aPhoto.data === 'string';
-                }
-            });
+            patient.photo.forEach(aPhoto => respuesta = respuesta && Object.keys(aPhoto).every(photoFields));
         }
         if (patient.contact) {
             patient.contact.forEach(aContact => {
                 if (aContact.relationship) {
-                    aContact.relationship.forEach(aRelation => {
-                        respuesta = respuesta && Object.keys(aRelation).every(codingFields);
-                    });
+                    aContact.relationship.forEach(aRelation => respuesta = respuesta && Object.keys(aRelation).every(codingFields));
                 }
                 if (aContact.name) {
                     respuesta = respuesta && validName(aContact.name);
@@ -356,35 +330,45 @@ export function verify(patient) {
     }
     return respuesta;
 }
+
 function pacienteFHIRFields(elem) {
     return elem.match('resourceType|identifier|active|name|telecom|gender|birthDate|deceasedBoolean|deceasedDateTime|address|maritalStatus|photo|contact') != null;
 }
+
 function identifierFields(elem) {
     return elem.match('use|type|system|value|period|assigner') != null;
 }
+
 function nameFields(elem) {
     return elem.match('resourceType|family|given') != null;
 }
+
 function telecomFields(elem) {
     return elem.match('resourceType|system|value|use|rank|period') != null;
 }
+
 function addressFields(elem) {
     return elem.match('resourceType|use|type|text|line|city|district|state|postalCode|country|period') != null;
 }
+
 function codingFields(elem) {
     return elem.match('coding|text') != null;
 }
+
 function photoFields(elem) {
     return elem.match('contentType|language|data|url|size|hash|title|creation') != null;
 }
+
 function contactFields(elem) {
     return elem.match('relationship|name|telecom|address|gender|organization|period') != null;
 }
+
 function validName(aName) {
     return Object.keys(aName).every(nameFields) && ('resourceType' in aName) && aName.resourceType === 'HumanName' &&
         ('family' in aName) && Array.isArray(aName.family) && aName.family.every(areStrings) &&
         ('given' in aName) && Array.isArray(aName.given) && aName.given.every(areStrings);
 }
+
 function areStrings(elem) {
     return typeof elem === 'string';
 }
