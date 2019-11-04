@@ -64,8 +64,8 @@ export function encode(patient) {
                 }], // The kind of relationship
                 name: {
                     resourceType: 'HumanName',
-                    family: unaRelacion.apellido, // Family name (often called 'Surname')
-                    given: [unaRelacion.nombre], // Given names (not always 'first'). Includes middle names
+                    family: unaRelacion.apellido.split(' '), // Family name (often called 'Surname')
+                    given: unaRelacion.nombre.split(' '), // Given names (not always 'first'). Includes middle names
                 }
             };
             return relacion;
@@ -90,8 +90,8 @@ export function encode(patient) {
             name: [{
                 use: 'official',
                 resourceType: 'HumanName',
-                family: patient.apellido,
-                given: patient.nombre,
+                family: patient.apellido.split(' '),
+                given: patient.nombre.split(' '),
                 text: `${patient.nombre} ${patient.apellido}`,
                 _family: {
                     extension: [
