@@ -10,7 +10,7 @@ let objeto = {
         apellido: 'PERIGA PONCE',
         sexo: 'masculino',
         genero: 'masculino',
-        fechaNacimiento: '2000-11-03T11:37:21.970-03:00',
+        fechaNacimiento: new Date('2000-11-03T11:37:21.970-03:00'),
         estadoCivil: null,
         entidadesValidadoras: [
             'Sisa'
@@ -29,7 +29,7 @@ let objeto = {
                     nombre: 'hijo / a',
                     opuesto: 'progenitor / a'
                 },
-                nombre: 'JOSEFINA',
+                nombre: 'JOSEFINA EMILIA',
                 apellido: 'PERINGA PONCE',
                 documento: '53964567'
             }
@@ -89,8 +89,8 @@ demo(paciente);
 
 function demo(patient) {
     let rta = Patient.encode(patient);
-    // console.log('Usuario codificado: ', rta);
+    console.log('Usuario codificado: ', rta);
     // console.log(rta);
-    let newRta = Patient.decode(rta);
+    // let newRta = Patient.decode(rta);
     // console.log('Rtanew: ', newRta);
 }
