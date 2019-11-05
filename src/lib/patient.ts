@@ -93,14 +93,14 @@ export function encode(patient) {
                 family: patient.apellido.split(' '),
                 given: patient.nombre.split(' '),
                 text: `${patient.nombre} ${patient.apellido}`,
-                _family: {
+                _family: [{
                     extension: [
                         {
                             url: 'http://hl7.org/fhir/StructureDefinition/humanname-fathers-family',
                             valueString: patient.apellido
                         },
                     ]
-                },
+                }],
                 // [TODO] Confirmar si va el _family
             }],
             gender: genero, // male | female | other | unknown
