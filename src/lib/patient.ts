@@ -61,8 +61,8 @@ export function encode(patient) {
                 }], // The kind of relationship
                 name: {
                     resourceType: 'HumanName',
-                    family: unaRelacion.apellido, // Family name (often called 'Surname')
-                    given: [unaRelacion.nombre], // Given names (not always 'first'). Includes middle names
+                    family: unaRelacion.apellido.split(' '), // Family name (often called 'Surname')
+                    given: unaRelacion.nombre.split(' '), // Given names (not always 'first'). Includes middle names
                 }
             };
             return relacion;
@@ -85,8 +85,8 @@ export function encode(patient) {
             active: data.activo ? data.activo : null, // Whether this patient's record is in active use
             name: [{
                 resourceType: 'HumanName',
-                family: data.apellido, // Family name (often called 'Surname')
-                given: data.nombre, // Given names (not always 'first'). Includes middle names
+                family: data.apellido.split(' '), // Family name (often called 'Surname')
+                given: data.nombre.split(' '), // Given names (not always 'first'). Includes middle names
             }],
             gender: genero, // male | female | other | unknown
             birthDate: data.fechaNacimiento,
