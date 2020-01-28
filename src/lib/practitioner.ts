@@ -74,29 +74,43 @@ export function encode(practitioner) {
                     system: 'https://www.saludneuquen.gob.ar/matriculacionGrado',
                     value: datosGrado.profesion.nombre
                 }] : [],
-                code: cantMatriculaciones > 0 ? datosGrado.matriculacion[cantMatriculaciones - 1].matriculaNumero : null,
+                code: cantMatriculaciones > 0 ? {
+                    coding: [{
+                        system: 'http://www.saludneuquen.gob.ar/fiscalizacion.html',
+                        code: datosGrado.profesion.codigo, // uso el código interno de fiscalización
+                        display: datosGrado.profesion.tipoDeFormacion // uso el tipo de formación según fiscalización
+                    }],
+                    text: datosGrado.matriculacion[cantMatriculaciones - 1].matriculaNumero
+                } : null,
                 period: {
                     start: datosGrado.matriculacion[cantMatriculaciones - 1].inicio ? datosGrado.matriculacion[cantMatriculaciones - 1].inicio : null,
                     end: datosGrado.matriculacion[cantMatriculaciones - 1].fin ? datosGrado.matriculacion[cantMatriculaciones - 1].fin : null
                 }
             };
             return unaMatricula;
-        }) : [];
-        matriculas.push(data.formacionPosgrado ? data.formacionPosgrado.map(datosPosgrado => {
+        }) : null;
+        let matriculasEspecialidad = (data.formacionPosgrado ? data.formacionPosgrado.map(datosPosgrado => {
             let cantMatriculacionesEsp = datosPosgrado.matriculacion.length;
             let unaMatricula = {
                 identifier: datosPosgrado.especialidad.nombre ? [{
                     system: 'https://www.saludneuquen.gob.ar/matriculacionEspecialidad/',
                     value: datosPosgrado.especialidad.nombre
                 }] : [],
-                code: cantMatriculacionesEsp > 0 ? datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].matriculaNumero : null,
+                code: cantMatriculacionesEsp > 0 ? {
+                    coding: [{
+                        system: 'http://www.saludneuquen.gob.ar/fiscalizacion.html',
+                        code: datosPosgrado.especialidad.codigo, // uso el código interno de fiscalización
+                        display: datosPosgrado.especialidad.tipo // uso el tipo de formación según fiscalización
+                    }],
+                    text: datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].matriculaNumero
+                } : null,
                 period: {
                     start: datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].inicio ? datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].inicio : null,
                     end: datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].fin ? datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].fin : null
                 }
             };
             return unaMatricula;
-        }) : matriculas);
+        }) : null);
         let genero;
         switch (data.sexo.toLowerCase()) { // En profesional no existe el campo genero
             case 'femenino':
@@ -133,7 +147,7 @@ export function encode(practitioner) {
             profesionalFHIR['address'] = direcciones;
         }
         if (matriculas.length > 0) {
-            profesionalFHIR['qualification'] = matriculas;
+            profesionalFHIR['qualification'] = matriculas.concat(matriculasEspecialidad);
         }
 
         return profesionalFHIR;
