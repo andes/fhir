@@ -262,182 +262,182 @@ let profesional = {
     incluidoSuperintendencia: false
 };
 
-let profesional2 = {
-    "nombre": "ANA MARIA",
-    "apellido": "GARCIA",
-    "tipoDocumento": "DNIF",
-    "documento": "6177061",
-    "documentoVencimiento": "1900-01-01T00:00:00.000-03:00",
-    "cuit": "27061770610",
-    "fechaNacimiento": "1949-05-23T00:00:00.000-03:00",
-    "lugarNacimiento": "Capital Federal",
-    "nacionalidad": {
-        "codigo": "200",
-        "nombre": "Argentina"
-    },
-    "sexo": "Femenino",
-    "notas": [
-        ""
-    ],
-    "formacionGrado": [
-        {
-            "profesion": {
-                "codigo": 1.0,
-                "nombre": "MEDICO",
-                "tipoDeFormacion": "Grado Universitario"
-            },
-            "entidadFormadora": {
-                "codigo": "1172",
-                "nombre": "UNIV. DE BS. AS."
-            },
-            "titulo": "MEDICA",
-            "fechaEgreso": "1974-12-21T00:00:00.000-03:00",
-            "matriculacion": [
-                {
-                    "matriculaNumero": 838.0,
-                    "libro": "IX",
-                    "folio": "2/3",
-                    "inicio": "1978-01-01T00:00:00.000-03:00",
-                    "fin": "2021-05-23T00:00:00.000-03:00",
-                    "baja": {
-                        "motivo": "",
-                        "fecha": null
-                    }
-                }
-            ],
-            "matriculado": true,
-            "papelesVerificados": true,
-            "renovacion": false,
-            "fechaDeInscripcion": "2011-08-04T00:00:00.000-03:00"
-        }
-    ],
-    "formacionPosgrado": [
-        {
-            "profesion": {
-                "codigo": 1.0,
-                "nombre": "MEDICO"
-            },
-            "especialidad": {
-                "codigo": 58.0,
-                "tipo": 1.0,
-                "nombre": "MEDICINA DEL TRABAJO"
-            },
-            "matriculado": true,
-            "papelesVerificados": true,
-            "revalida": false,
-            "matriculacion": [
-                {
-                    "matriculaNumero": 872.0,
-                    "libro": "II",
-                    "folio": "62/63",
-                    "fin": "2016-01-01T00:00:00.000-03:00",
-                    "baja": {
-                        "motivo": "",
-                        "fecha": null
-                    }
-                }
-            ],
-            "tieneVencimiento": false,
-            "fechasDeAltas": [
-                {
-                    "fecha": "1995-05-05T00:00:00.000-03:00"
-                }
-            ]
-        }
-    ],
-    "sanciones": [
-        {
-            "numero": null,
-            "sancion": {
-                "id": null
-            },
-            "motivo": null,
-            "normaLegal": null,
-            "fecha": null,
-            "vencimiento": null
-        }
-    ],
-    "domicilios": [
-        {
-            "activo": true,
-            "tipo": "legal",
-            "valor": "O HIGGINS B° AREVALO 240",
-            "codigoPostal": "8324",
-            "ubicacion": {
-                "pais": {
-                    "nombre": "Argentina"
-                },
-                "provincia": {
-                    "nombre": "Río Negro"
-                },
-                "localidad": {
-                    "nombre": "CIPOLLETTI"
-                }
-            }
-        },
-        {
-            "activo": true,
-            "tipo": "profesional",
-            "valor": "",
-            "codigoPostal": "8300",
-            "ubicacion": {
-                "pais": {
-                    "nombre": "Argentina"
-                },
-                "provincia": {
-                    "nombre": "Neuquén"
-                },
-                "localidad": {
-                    "nombre": ""
-                }
-            }
-        },
-        {
-            "activo": true,
-            "tipo": "real",
-            "valor": "O HIGGINS B° AREVALO 240",
-            "codigoPostal": "8324",
-            "ubicacion": {
-                "pais": {
-                    "nombre": "Argentina"
-                },
-                "provincia": {
-                    "nombre": "Río Negro"
-                },
-                "localidad": {
-                    "nombre": "CIPOLLETTI"
-                }
-            }
-        }
-    ],
-    "contactos": [
-        {
-            "tipo": "celular",
-            "valor": "2994198837",
-            "activo": true
-        },
-        {
-            "tipo": "email",
-            "valor": "moligar@fibertel.com.ar",
-            "activo": true
-        },
-        {
-            "tipo": "fijo",
-            "valor": "0299 4775886",
-            "activo": true
-        }
-    ],
-    "rematriculado": 1.0,
-    "turno": "2016-10-28T11:30:11.000-03:00",
-    "profesionalMatriculado": true,
-    "OtrosDatos": [],
-    "firmas": [],
-    "habilitado": true,
-    "incluidoSuperintendencia": false,
-};
+// let profesional2 = {
+//     "nombre": "ANA MARIA",
+//     "apellido": "GARCIA",
+//     "tipoDocumento": "DNIF",
+//     "documento": "6177061",
+//     "documentoVencimiento": "1900-01-01T00:00:00.000-03:00",
+//     "cuit": "27061770610",
+//     "fechaNacimiento": "1949-05-23T00:00:00.000-03:00",
+//     "lugarNacimiento": "Capital Federal",
+//     "nacionalidad": {
+//         "codigo": "200",
+//         "nombre": "Argentina"
+//     },
+//     "sexo": "Femenino",
+//     "notas": [
+//         ""
+//     ],
+//     "formacionGrado": [
+//         {
+//             "profesion": {
+//                 "codigo": 1.0,
+//                 "nombre": "MEDICO",
+//                 "tipoDeFormacion": "Grado Universitario"
+//             },
+//             "entidadFormadora": {
+//                 "codigo": "1172",
+//                 "nombre": "UNIV. DE BS. AS."
+//             },
+//             "titulo": "MEDICA",
+//             "fechaEgreso": "1974-12-21T00:00:00.000-03:00",
+//             "matriculacion": [
+//                 {
+//                     "matriculaNumero": 838.0,
+//                     "libro": "IX",
+//                     "folio": "2/3",
+//                     "inicio": "1978-01-01T00:00:00.000-03:00",
+//                     "fin": "2021-05-23T00:00:00.000-03:00",
+//                     "baja": {
+//                         "motivo": "",
+//                         "fecha": null
+//                     }
+//                 }
+//             ],
+//             "matriculado": true,
+//             "papelesVerificados": true,
+//             "renovacion": false,
+//             "fechaDeInscripcion": "2011-08-04T00:00:00.000-03:00"
+//         }
+//     ],
+//     "formacionPosgrado": [
+//         {
+//             "profesion": {
+//                 "codigo": 1.0,
+//                 "nombre": "MEDICO"
+//             },
+//             "especialidad": {
+//                 "codigo": 58.0,
+//                 "tipo": 1.0,
+//                 "nombre": "MEDICINA DEL TRABAJO"
+//             },
+//             "matriculado": true,
+//             "papelesVerificados": true,
+//             "revalida": false,
+//             "matriculacion": [
+//                 {
+//                     "matriculaNumero": 872.0,
+//                     "libro": "II",
+//                     "folio": "62/63",
+//                     "fin": "2016-01-01T00:00:00.000-03:00",
+//                     "baja": {
+//                         "motivo": "",
+//                         "fecha": null
+//                     }
+//                 }
+//             ],
+//             "tieneVencimiento": false,
+//             "fechasDeAltas": [
+//                 {
+//                     "fecha": "1995-05-05T00:00:00.000-03:00"
+//                 }
+//             ]
+//         }
+//     ],
+//     "sanciones": [
+//         {
+//             "numero": null,
+//             "sancion": {
+//                 "id": null
+//             },
+//             "motivo": null,
+//             "normaLegal": null,
+//             "fecha": null,
+//             "vencimiento": null
+//         }
+//     ],
+//     "domicilios": [
+//         {
+//             "activo": true,
+//             "tipo": "legal",
+//             "valor": "O HIGGINS B° AREVALO 240",
+//             "codigoPostal": "8324",
+//             "ubicacion": {
+//                 "pais": {
+//                     "nombre": "Argentina"
+//                 },
+//                 "provincia": {
+//                     "nombre": "Río Negro"
+//                 },
+//                 "localidad": {
+//                     "nombre": "CIPOLLETTI"
+//                 }
+//             }
+//         },
+//         {
+//             "activo": true,
+//             "tipo": "profesional",
+//             "valor": "",
+//             "codigoPostal": "8300",
+//             "ubicacion": {
+//                 "pais": {
+//                     "nombre": "Argentina"
+//                 },
+//                 "provincia": {
+//                     "nombre": "Neuquén"
+//                 },
+//                 "localidad": {
+//                     "nombre": ""
+//                 }
+//             }
+//         },
+//         {
+//             "activo": true,
+//             "tipo": "real",
+//             "valor": "O HIGGINS B° AREVALO 240",
+//             "codigoPostal": "8324",
+//             "ubicacion": {
+//                 "pais": {
+//                     "nombre": "Argentina"
+//                 },
+//                 "provincia": {
+//                     "nombre": "Río Negro"
+//                 },
+//                 "localidad": {
+//                     "nombre": "CIPOLLETTI"
+//                 }
+//             }
+//         }
+//     ],
+//     "contactos": [
+//         {
+//             "tipo": "celular",
+//             "valor": "2994198837",
+//             "activo": true
+//         },
+//         {
+//             "tipo": "email",
+//             "valor": "moligar@fibertel.com.ar",
+//             "activo": true
+//         },
+//         {
+//             "tipo": "fijo",
+//             "valor": "0299 4775886",
+//             "activo": true
+//         }
+//     ],
+//     "rematriculado": 1.0,
+//     "turno": "2016-10-28T11:30:11.000-03:00",
+//     "profesionalMatriculado": true,
+//     "OtrosDatos": [],
+//     "firmas": [],
+//     "habilitado": true,
+//     "incluidoSuperintendencia": false,
+// };
 
 // demo(paciente, 'paciente');
-demo(profesional2, 'profesional');
+demo(profesional, 'profesional');
 
 function demo(obj, tipo) {
     switch (tipo) {
@@ -446,7 +446,7 @@ function demo(obj, tipo) {
             break;
         }
         case 'profesional': {
-            console.log(Practitioner.encode(obj));
+            //  console.log(Practitioner.encode(obj));
             break;
         }
         default: {
