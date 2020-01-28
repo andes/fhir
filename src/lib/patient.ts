@@ -7,7 +7,7 @@ import { getDominio, makeUrl } from './config';
  */
 export function encode(patient) {
     if (patient) {
-        const identificadores = [];
+        const identificadores: any = [];
         if (patient.documento) {
             identificadores.push({
                 system: 'http://www.renaper.gob.ar/dni',
