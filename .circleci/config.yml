@@ -24,7 +24,7 @@ workflows:
       - require-approval:
           type: approval
           requires:
-            - build
+            - install
           filters:
             branches:
               only: v2.0.0
