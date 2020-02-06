@@ -17,6 +17,3 @@ jobs:
       - run:
           name: lint
           command: npm run lint
-      - run:
-          name: start
-          command: npm run start
