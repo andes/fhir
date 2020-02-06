@@ -1,9 +1,9 @@
 {
   "name": "@andes/fhir",
-  "version": "2.0.4",
+  "version": "0.0.0-development",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andes/fhir.git"
+    "url": "https://github.com/andes/fhir.git"
   },
   "author": "Red TICs",
   "license": "GPL-3.0",
@@ -14,7 +14,8 @@
     "tsc:w": "tsc -w",
     "prepublish": "tsc -p ./ --outDir dist/",
     "publish-please": "publish-please",
-    "prepublishOnly": "publish-please guard"
+    "prepublishOnly": "publish-please guard",
+    "semantic-release": "semantic-release"
   },
   "main": "./dist/index.js",
   "devDependencies": {
@@ -25,7 +26,8 @@
     "ts-node": "~3.0.4",
     "tslint": "^5.11.0",
     "tslint-eslint-rules": "^5.4.0",
-    "typescript": "^3.1.6"
+    "typescript": "^3.1.6",
+    "semantic-release": "^17.0.2"
   },
   "dependencies": {
     "moment": "^2.24.0"
