@@ -1,19 +1,36 @@
 version: 2
 jobs:
-  build:
+  install:
     docker:
-      - image: circleci/node:8
+      - image: 'circleci/node:latest'
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: install
           command: npm install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules 
-      - run:
-          name: lint
-          command: npm run lint
+  deploy:
+    docker:
+      - image: 'circleci/node:latest'
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run: npx semantic-release
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - install
+      - require-approval:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only: v2.0.0
+      - deploy:
+          requires:
+            - require-approval
+          filters:
+            branches:
+              only: v2.0.0
