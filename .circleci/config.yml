@@ -12,16 +12,17 @@ jobs:
           name: npm_install
           command: npm install
   deploy:
+    working_directory: ./
     docker:
       - image: 'circleci/node:8'
     steps:
-      - run: npx semantic-release
+      - run: npm run semantic-release || true
 
 workflows:
   version: 2
   test_and_realease:
     jobs:
-      install
-      deploy:
-        requieres:
-          install
+      - install
+      - deploy:
+          requieres:
+            - install
