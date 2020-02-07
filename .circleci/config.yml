@@ -4,12 +4,36 @@ jobs:
     docker:
       - image: 'circleci/node:8'
     steps:
-      - checkout
+       - checkout
+      - restore_cache:
+          keys:
+            - v2-deps-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - v2-deps-{{ .Branch }}-
+            - v2-deps-
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          key: v2-deps-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+            - ~/.cache
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - .cache
+  build:
+    working_directory: ~/
+    docker:
+      - image: circleci/node:8
+    steps:
+      - attach_workspace:
+          at: ~/
       - run:
           name: lint
           command: npm run lint
       - run:
-          name: npm_install
+          name: npm-install
           command: npm install
   deploy:
     working_directory: ./
@@ -20,9 +44,22 @@ jobs:
 
 workflows:
   version: 2
-  test_and_realease:
+  prepare_and_release:
     jobs:
       - install
-      - deploy:
-          requieres:
+      - build:
+          requires:
             - install
+      - request-deploy:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only: v2.0.0
+      - deploy:
+           requires:
+            - request-deploy
+          filters:
+            branches:
+              only: v2.0.0
