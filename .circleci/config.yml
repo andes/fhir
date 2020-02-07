@@ -15,7 +15,7 @@ jobs:
     docker:
       - image: 'circleci/node:8'
     steps:
-      - run: npm run semantic-release || true
+      - run: npx semantic-release
 
 workflows:
   version: 2
