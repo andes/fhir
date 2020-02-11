@@ -36,7 +36,6 @@
   },
   "release": {
     "branch": "v2.0.0",
-    "verifyConditions": "condition-circle",
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
