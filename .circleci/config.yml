@@ -1,6 +1,7 @@
 version: 2
 jobs:
   install:
+    working_directory: ~/fhir
     docker:
       - image: 'circleci/node:8'
     steps:
@@ -19,10 +20,12 @@ jobs:
             - ~/.npm
             - ~/.cache
       - persist_to_workspace:
-          root: ~/
+          root: .
           paths:
             - .cache
+            - .
   build:
+    working_directory: ~/fhir
     docker:
       - image: circleci/node:8
     steps:
@@ -33,6 +36,7 @@ jobs:
           name: npm-install
           command: npm install
   deploy:
+    working_directory: ~/fhir
     docker:
       - image: 'circleci/node:8'
     steps:
