@@ -3,7 +3,7 @@ jobs:
   install:
     working_directory: ~/fhir
     docker:
-      - image: 'circleci/node:8'
+      - image: 'circleci/node:12'
     steps:
       - checkout
       - restore_cache:
@@ -27,7 +27,7 @@ jobs:
   build:
     working_directory: ~/fhir
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:12
     steps:
       - attach_workspace:
           at: ~/
@@ -40,7 +40,7 @@ jobs:
   deploy:
     working_directory: ~/fhir
     docker:
-      - image: 'circleci/node:8'
+      - image: 'circleci/node:12'
     steps:
       - attach_workspace:
           at: ~/
