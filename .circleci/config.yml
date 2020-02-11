@@ -19,6 +19,7 @@ jobs:
             - ~/.npm
             - ~/.cache
       - persist_to_workspace:
+          root: ~/
           paths:
             - .cache
   build:
