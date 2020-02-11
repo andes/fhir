@@ -1,7 +1,6 @@
 version: 2
 jobs:
   install:
-    working_directory: ~/
     docker:
       - image: 'circleci/node:8'
     steps:
@@ -20,16 +19,12 @@ jobs:
             - ~/.npm
             - ~/.cache
       - persist_to_workspace:
-          root: ~/
           paths:
             - .cache
   build:
-    working_directory: ~/
     docker:
       - image: circleci/node:8
     steps:
-      - attach_workspace:
-          at: ~/
       - run:
           name: lint
           command: npm run lint
@@ -37,7 +32,6 @@ jobs:
           name: npm-install
           command: npm install
   deploy:
-    working_directory: ~/
     docker:
       - image: 'circleci/node:8'
     steps:
