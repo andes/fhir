@@ -60,10 +60,10 @@ workflows:
             - build
           filters:
             branches:
-              only: v2.0.0
+              only: master
       - deploy:
            requires:
             - request-deploy
            filters:
             branches:
-              only: v2.0.0
+              only: master
