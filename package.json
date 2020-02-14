@@ -12,9 +12,7 @@
     "start": "node index.js",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "prepublish": "tsc -p ./ --outDir dist/",
-    "publish-please": "publish-please",
-    "prepublishOnly": "publish-please guard",
+    "prepublishOnly": "rm -rf dist && tsc -p ./ --outDir dist/",
     "semantic-release": "semantic-release"
   },
   "main": "./dist/index.js",
@@ -24,7 +22,6 @@
     "@types/node": "^6.0.117",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
-    "publish-please": "^5.5.0",
     "semantic-release": "^17.0.2",
     "ts-node": "~3.0.4",
     "tslint": "^5.11.0",
@@ -35,7 +32,7 @@
     "moment": "^2.24.0"
   },
   "release": {
-    "branch": "v2.0.0",
+    "branch": "master",
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
