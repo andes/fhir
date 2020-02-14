@@ -132,7 +132,7 @@ export function encode(patient) {
                 text: estadoCivil
             };
         }
-        if (patient.foto) { // Image of the patient
+        if (patient.foto) {
             pacienteFHIR['photo'] = [{
                 patient: patient.foto
             }];
