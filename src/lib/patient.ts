@@ -14,12 +14,12 @@ export function encode(patient) {
                 value: patient.documento
             });
         }
-        // if (patient.cuil) {
-        //     identificadores.push({
-        //         system: 'http://www.renaper.gob.ar/cuil',
-        //         value: patient.cuil
-        //     });
-        // }
+        if (patient.cuil) {
+            identificadores.push({
+                system: 'http://www.renaper.gob.ar/cuil',
+                value: patient.cuil
+            });
+        }
         identificadores.push({
             system: getDominio(),
             value: patient._id
