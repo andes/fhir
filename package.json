@@ -1,9 +1,9 @@
 {
   "name": "@andes/fhir",
-  "version": "1.0.4",
+  "version": "0.0.0-development",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andes/fhir.git"
+    "url": "https://github.com/andes/fhir.git"
   },
   "author": "Red TICs",
   "license": "GPL-3.0",
@@ -14,17 +14,35 @@
     "tsc:w": "tsc -w",
     "prepublish": "tsc -p ./ --outDir dist/",
     "publish-please": "publish-please",
-    "prepublishOnly": "publish-please guard"
+    "prepublishOnly": "publish-please guard",
+    "semantic-release": "semantic-release"
   },
   "main": "./dist/index.js",
   "devDependencies": {
+    "@semantic-release/changelog": "^3.0.6",
+    "@semantic-release/git": "^7.0.18",
     "@types/node": "^6.0.117",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "publish-please": "^5.5.0",
+    "semantic-release": "^17.0.2",
     "ts-node": "~3.0.4",
     "tslint": "^5.11.0",
     "tslint-eslint-rules": "^5.4.0",
     "typescript": "^3.1.6"
+  },
+  "dependencies": {
+    "moment": "^2.24.0"
+  },
+  "release": {
+    "branch": "v2.0.0",
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/git",
+      "@semantic-release/github"
+    ]
   }
 }

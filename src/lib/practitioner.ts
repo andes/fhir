@@ -1,3 +1,5 @@
+import { getDominio, makeUrl } from './config';
+
 /**
  * Encode a practitioner from ANDES to FHIR
  * @param {} practitioner
@@ -6,17 +8,17 @@ export function encode(practitioner) {
     let data = practitioner;
     if (data) {
         let identificadores = data.documento ? [{
-            system: 'DU',
+            system: 'http://www.renaper.gob.ar/dni',
             value: data.documento
         }] : [];
-        if (data.cuil) {
+        if (data.cuit) {
             identificadores.push({
-                system: 'CUIL',
-                value: data.cuil
+                system: 'https://seti.afip.gob.ar/padron-puc-constancia-internet/ConsultaConstanciaAction.do',
+                value: data.cuit
             });
         }
         identificadores.push({
-            system: 'andes',
+            system: getDominio(),
             value: data._id
         });
         // Parsea contactos
@@ -40,14 +42,14 @@ export function encode(practitioner) {
             return cont;
         }) : [];
         // Parsea direcciones
-        let direcciones = data.direccion ? data.direccion.map(unaDireccion => {
+        let direcciones = data.domicilios ? data.domicilios.map(unDomicilio => {
             let direc = {
                 resourceType: 'Address',
-                postalCode: unaDireccion.codigoPostal ? unaDireccion.codigoPostal : '',
-                line: [unaDireccion.valor],
-                city: unaDireccion.ubicacion.localidad ? unaDireccion.ubicacion.localidad.nombre : '',
-                state: unaDireccion.ubicacion.provincia ? unaDireccion.ubicacion.provincia.nombre : '',
-                country: unaDireccion.ubicacion.pais ? unaDireccion.ubicacion.pais.nombre : '',
+                postalCode: unDomicilio.codigoPostal ? unDomicilio.codigoPostal : '',
+                line: [unDomicilio.valor],
+                city: unDomicilio.ubicacion.localidad ? unDomicilio.ubicacion.localidad.nombre : '',
+                state: unDomicilio.ubicacion.provincia ? unDomicilio.ubicacion.provincia.nombre : '',
+                country: unDomicilio.ubicacion.pais ? unDomicilio.ubicacion.pais.nombre : ''
             };
             return direc;
         }) : [];
@@ -65,8 +67,52 @@ export function encode(practitioner) {
             };
             return relacion;
         }) : [];
+        let matriculas = data.formacionGrado ? data.formacionGrado.map(datosGrado => {
+            let cantMatriculaciones = datosGrado.matriculacion ? datosGrado.matriculacion.length : 0;
+            let unaMatricula = {
+                identifier: datosGrado.profesion.nombre ? [{
+                    system: 'https://www.saludneuquen.gob.ar/matriculacionGrado',
+                    value: datosGrado.profesion.nombre
+                }] : [],
+                code: cantMatriculaciones > 0 ? {
+                    coding: [{
+                        system: 'http://www.saludneuquen.gob.ar/fiscalizacion.html',
+                        code: datosGrado.profesion.codigo, // uso el código interno de fiscalización
+                        display: datosGrado.profesion.tipoDeFormacion // uso el tipo de formación según fiscalización
+                    }],
+                    text: datosGrado.matriculacion[cantMatriculaciones - 1].matriculaNumero
+                } : null,
+                period: cantMatriculaciones > 0 ? {
+                    start: datosGrado.matriculacion[cantMatriculaciones - 1].inicio ? datosGrado.matriculacion[cantMatriculaciones - 1].inicio : null,
+                    end: datosGrado.matriculacion[cantMatriculaciones - 1].fin ? datosGrado.matriculacion[cantMatriculaciones - 1].fin : null
+                } : null
+            };
+            return unaMatricula;
+        }) : null;
+        let matriculasEspecialidad = (data.formacionPosgrado ? data.formacionPosgrado.map(datosPosgrado => {
+            let cantMatriculacionesEsp = datosPosgrado.matriculacion ? datosPosgrado.matriculacion.length : 0;
+            let unaMatricula = {
+                identifier: datosPosgrado.especialidad.nombre ? [{
+                    system: 'https://www.saludneuquen.gob.ar/matriculacionEspecialidad/',
+                    value: datosPosgrado.especialidad.nombre
+                }] : [],
+                code: cantMatriculacionesEsp > 0 ? {
+                    coding: [{
+                        system: 'http://www.saludneuquen.gob.ar/fiscalizacion.html',
+                        code: datosPosgrado.especialidad.codigo, // uso el código interno de fiscalización
+                        display: datosPosgrado.especialidad.tipo // uso el tipo de formación según fiscalización
+                    }],
+                    text: datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].matriculaNumero
+                } : null,
+                period: cantMatriculacionesEsp > 0 ? {
+                    start: datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].inicio ? datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].inicio : null,
+                    end: datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].fin ? datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].fin : null
+                } : null
+            };
+            return unaMatricula;
+        }) : null);
         let genero;
-        switch (data.genero) {
+        switch (data.sexo.toLowerCase()) { // En profesional no existe el campo genero
             case 'femenino':
                 genero = 'female';
                 break;
@@ -80,7 +126,7 @@ export function encode(practitioner) {
         let profesionalFHIR = {
             resourceType: 'Practitioner',
             identifier: identificadores,
-            active: data.activo ? data.activo : null, // Whether this practitioner's record is in active use
+            active: data.habilitado ? data.habilitado : null, // Si el profesional está habilitado, estará activo para el sistema.
             name: [{
                 resourceType: 'HumanName',
                 family: data.apellido, // Family name (often called 'Surname')
@@ -100,6 +146,10 @@ export function encode(practitioner) {
         if (direcciones.length > 0) { // Addresses for the individual
             profesionalFHIR['address'] = direcciones;
         }
+        if (matriculas.length > 0) {
+            profesionalFHIR['qualification'] = matriculas.concat(matriculasEspecialidad);
+        }
+
         return profesionalFHIR;
     } else {
         return null;
