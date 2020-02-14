@@ -1,4 +1,4 @@
-let DOMINIO = '';
+let DOMINIO = 'andes.gob.ar';
 
 export function initialize({ dominio }) {
     DOMINIO = dominio;
