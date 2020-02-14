@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/andes/fhir/compare/v1.0.0...v1.0.1) (2020-02-14)
+
+
+### Bug Fixes
+
+* **demo:** add some elemts to demo ([3bd926c](https://github.com/andes/fhir/commit/3bd926c1433ca67555aa3ef83c6145754745a201))
+
 # 1.0.0 (2020-02-14)
 
 
