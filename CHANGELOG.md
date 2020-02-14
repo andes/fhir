@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/andes/fhir/compare/v1.0.1...v1.1.0) (2020-02-14)
+
+
+### Features
+
+* **patient:** It's a lie ([4dc1748](https://github.com/andes/fhir/commit/4dc17484de9bcd21b985c8379d429749aa9332b2))
+
 ## [1.0.1](https://github.com/andes/fhir/compare/v1.0.0...v1.0.1) (2020-02-14)
 
 
