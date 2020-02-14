@@ -58,7 +58,7 @@ export function encode(practitioner) {
             let relacion = {
                 relationship: [{
                     text: unaRelacion.relacion.nombre
-                }], // The kind of relationship
+                }],
                 name: {
                     resourceType: 'HumanName',
                     family: unaRelacion.apellido,
@@ -77,8 +77,8 @@ export function encode(practitioner) {
                 code: cantMatriculaciones > 0 ? {
                     coding: [{
                         system: 'http://www.saludneuquen.gob.ar/fiscalizacion.html',
-                        code: datosGrado.profesion.codigo, // uso el código interno de fiscalización
-                        display: datosGrado.profesion.tipoDeFormacion // uso el tipo de formación según fiscalización
+                        code: datosGrado.profesion.codigo,
+                        display: datosGrado.profesion.tipoDeFormacion
                     }],
                     text: datosGrado.matriculacion[cantMatriculaciones - 1].matriculaNumero
                 } : null,
@@ -99,8 +99,8 @@ export function encode(practitioner) {
                 code: cantMatriculacionesEsp > 0 ? {
                     coding: [{
                         system: 'http://www.saludneuquen.gob.ar/fiscalizacion.html',
-                        code: datosPosgrado.especialidad.codigo, // uso el código interno de fiscalización
-                        display: datosPosgrado.especialidad.tipo // uso el tipo de formación según fiscalización
+                        code: datosPosgrado.especialidad.codigo,
+                        display: datosPosgrado.especialidad.tipo
                     }],
                     text: datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].matriculaNumero
                 } : null,
@@ -112,7 +112,7 @@ export function encode(practitioner) {
             return unaMatricula;
         }) : null);
         let genero;
-        switch (data.sexo.toLowerCase()) { // En profesional no existe el campo genero
+        switch (data.sexo.toLowerCase()) {
             case 'femenino':
                 genero = 'female';
                 break;
@@ -126,24 +126,24 @@ export function encode(practitioner) {
         let profesionalFHIR = {
             resourceType: 'Practitioner',
             identifier: identificadores,
-            active: data.habilitado ? data.habilitado : null, // Si el profesional está habilitado, estará activo para el sistema.
+            active: data.habilitado ? data.habilitado : null,
             name: [{
                 resourceType: 'HumanName',
-                family: data.apellido, // Family name (often called 'Surname')
-                given: data.nombre, // Given names (not always 'first'). Includes middle names
+                family: data.apellido,
+                given: data.nombre,
             }],
-            gender: genero, // male | female | other | unknown
+            gender: genero,
             birthDate: data.fechaNacimiento,
         };
-        if (data.foto) { // Image of the patient
+        if (data.foto) {
             profesionalFHIR['photo'] = [{
                 data: data.foto
             }];
         }
-        if (contactos.length > 0) { // A contact detail for the individual
+        if (contactos.length > 0) {
             profesionalFHIR['telecom'] = contactos;
         }
-        if (direcciones.length > 0) { // Addresses for the individual
+        if (direcciones.length > 0) {
             profesionalFHIR['address'] = direcciones;
         }
         if (matriculas.length > 0) {
