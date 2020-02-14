@@ -68,7 +68,7 @@ export function encode(practitioner) {
             return relacion;
         }) : [];
         let matriculas = data.formacionGrado ? data.formacionGrado.map(datosGrado => {
-            let cantMatriculaciones = datosGrado.matriculacion.length;
+            let cantMatriculaciones = datosGrado.matriculacion ? datosGrado.matriculacion.length : 0;
             let unaMatricula = {
                 identifier: datosGrado.profesion.nombre ? [{
                     system: 'https://www.saludneuquen.gob.ar/matriculacionGrado',
@@ -82,15 +82,15 @@ export function encode(practitioner) {
                     }],
                     text: datosGrado.matriculacion[cantMatriculaciones - 1].matriculaNumero
                 } : null,
-                period: {
+                period: cantMatriculaciones > 0 ? {
                     start: datosGrado.matriculacion[cantMatriculaciones - 1].inicio ? datosGrado.matriculacion[cantMatriculaciones - 1].inicio : null,
                     end: datosGrado.matriculacion[cantMatriculaciones - 1].fin ? datosGrado.matriculacion[cantMatriculaciones - 1].fin : null
-                }
+                } : null
             };
             return unaMatricula;
         }) : null;
         let matriculasEspecialidad = (data.formacionPosgrado ? data.formacionPosgrado.map(datosPosgrado => {
-            let cantMatriculacionesEsp = datosPosgrado.matriculacion.length;
+            let cantMatriculacionesEsp = datosPosgrado.matriculacion ? datosPosgrado.matriculacion.length : 0;
             let unaMatricula = {
                 identifier: datosPosgrado.especialidad.nombre ? [{
                     system: 'https://www.saludneuquen.gob.ar/matriculacionEspecialidad/',
@@ -104,10 +104,10 @@ export function encode(practitioner) {
                     }],
                     text: datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].matriculaNumero
                 } : null,
-                period: {
+                period: cantMatriculacionesEsp > 0 ? {
                     start: datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].inicio ? datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].inicio : null,
                     end: datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].fin ? datosPosgrado.matriculacion[cantMatriculacionesEsp - 1].fin : null
-                }
+                } : null
             };
             return unaMatricula;
         }) : null);
