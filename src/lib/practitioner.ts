@@ -61,8 +61,8 @@ export function encode(practitioner) {
                 }], // The kind of relationship
                 name: {
                     resourceType: 'HumanName',
-                    family: unaRelacion.apellido, // Family name (often called 'Surname')
-                    given: [unaRelacion.nombre], // Given names (not always 'first'). Includes middle names
+                    family: unaRelacion.apellido,
+                    given: [unaRelacion.nombre],
                 }
             };
             return relacion;
