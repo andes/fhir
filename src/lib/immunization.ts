@@ -28,37 +28,37 @@ export function encode(patientReference, nomivac) {
             }
         ],
         status: 'completed',
-        // notGiven: false,
-        // vaccineCode: {
-        //     coding: [
-        //         {
-        //             system: 'https://snomed.info/sct/11000221109/id/228100022110',
-        //             code: '46233009',
-        //             display: ' producto que contiene vacuna contra el virus Influenza en forma farmacéutica de administración por vía nasal (forma farmacéutica de producto medicinal)'
-        //         }
-        //     ]
-        // },
+        notGiven: false,
+        vaccineCode: {
+            coding: [
+                {
+                    system: 'https://snomed.info/sct/11000221109/id/228100022110',
+                    code: nomivac.idvacuna,
+                    display: nomivac.vacuna
+                }
+            ]
+        },
         patient: {
             reference: patientReference
         },
         date: nomivac.fechaAplicacion,
         primarySource: false,
-        // location: {
-        //     reference: 'http://argentina.gob.ar/salud/refes/14999912399913'
-        // },
-        // lotNumber: '00850',
-        // vaccinationProtocol: [
-        //     {
-        //         doseSequence: 1,
-        //         doseStatus: {
-        //             coding: [
-        //                 {
-        //                     system: 'http://hl7.org/fhir/vaccination-protocol-dose-status',
-        //                     code: 'count'
-        //                 }
-        //             ]
-        //         }
-        //     }
-        // ]
+        location: {
+            reference: 'http://argentina.gob.ar/salud/refes/14999912399913'
+        },
+        lotNumber: null,
+        vaccinationProtocol: [
+            {
+                doseSequence: 1,
+                doseStatus: {
+                    coding: [
+                        {
+                            system: 'http://hl7.org/fhir/vaccination-protocol-dose-status',
+                            code: nomivac.dosis
+                        }
+                    ]
+                }
+            }
+        ]
     };
 }
