@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/andes/fhir/compare/v1.1.0...v1.2.0) (2020-05-12)
+
+
+### Features
+
+* **inmunization:** modificamos la informacion del recurso vacunas ([b9a3443](https://github.com/andes/fhir/commit/b9a34439b049fc75f30e0419dbcd748d1b806d57))
+
 # [1.1.0](https://github.com/andes/fhir/compare/v1.0.1...v1.1.0) (2020-02-14)
 
 
