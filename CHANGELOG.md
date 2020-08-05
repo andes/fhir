@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/andes/fhir/compare/v1.2.0...v1.3.0) (2020-08-05)
+
+
+### Features
+
+* **fhir:** agregamos la feature de medication y medicationStatement ([#8](https://github.com/andes/fhir/issues/8)) ([65771a2](https://github.com/andes/fhir/commit/65771a2052108f93f1ca819a49cd60408619e90c))
+
 # [1.2.0](https://github.com/andes/fhir/compare/v1.1.0...v1.2.0) (2020-05-12)
 
 
