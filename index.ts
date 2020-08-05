@@ -7,6 +7,8 @@ import * as Composition from './src/lib/composition';
 import * as Bundle from './src/lib/bundle';
 import * as DocumentReference from './src/lib/document-reference';
 import * as Device from './src/lib/device';
+import * as Medication from './src/lib/medication';
+import * as MedicationStatement from './src/lib/medicationStatement';
 
 export { getDominio, initialize } from './src/lib/config';
 
@@ -19,5 +21,7 @@ export {
     Composition,
     Bundle,
     DocumentReference,
-    Device
+    Device,
+    Medication,
+    MedicationStatement
 };
