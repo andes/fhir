@@ -10,6 +10,14 @@ import * as Device from './src/lib/device';
 import * as Medication from './src/lib/medication';
 import * as MedicationStatement from './src/lib/medicationStatement';
 
+import * as DicomPatient from './src/lib/dicom/patient';
+import * as DicomWorklist from './src/lib/dicom/worklist';
+
+const DICOM = {
+    patien: DicomPatient.encode,
+    worklist: DicomWorklist.encode
+};
+
 export { getDominio, initialize } from './src/lib/config';
 
 export {
@@ -23,5 +31,6 @@ export {
     DocumentReference,
     Device,
     Medication,
-    MedicationStatement
+    MedicationStatement,
+    DICOM
 };
