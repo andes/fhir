@@ -23,7 +23,7 @@ export function encode(medication) {
             ],
             text: medication.pt.term
         },
-        status: medication.active == true ? 'active' : 'inactive',
+        status: medication.active === true ? 'active' : 'inactive',
         // manufacturer: null,
         // form: null,
         // amount: null,
@@ -53,7 +53,7 @@ export function encode(medication) {
         //     }
         // ],
         text: {
-            status: "generated",
+            status: 'generated',
             div: `<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: Medicacion</p><p><b>meta</b>: </p><p><b>text</b>: ${medication.pt.term}</p></div>`
         }
     };

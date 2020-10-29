@@ -70,7 +70,7 @@ export function encode(ID, patientReference, custodianReference, deviceReference
                 ]
             },
             entry: AllergyIntoleranceReferences.map(getReference),
-        }]
+        }];
     }
     if (ConditionReferences.length > 0) {
         conditions = [{

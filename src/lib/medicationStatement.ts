@@ -6,16 +6,16 @@
 export function encode(patientReference, medicationReference, prestacionMedicamento) {
     return {
         resourceType: 'MedicationStatement',
-        status: (prestacionMedicamento.valor.estado === 'activo')?'active':'inactive',
+        status: (prestacionMedicamento.valor.estado === 'activo') ? 'active' : 'inactive',
         id: prestacionMedicamento._id,  // El código de la prestación donde está el registro del contexto de porque está consumiendo el medicamento
         effectiveDateTime: prestacionMedicamento.createdAt,
         medicationCodeableConcept: {
             coding: [
                 {
-                system: 'http://snomed.info/sct',
-                code: prestacionMedicamento.concepto.conceptId,
-                display: prestacionMedicamento.concepto.term
-                }   
+                    system: 'http://snomed.info/sct',
+                    code: prestacionMedicamento.concepto.conceptId,
+                    display: prestacionMedicamento.concepto.term
+                }
             ]
         },
         meta: {
@@ -31,11 +31,11 @@ export function encode(patientReference, medicationReference, prestacionMedicame
         medicationReference: {
             reference: medicationReference
         },
-        // context: null, // Encounter | Episode of care (podría ser el informe del encuentro o lo que definamos que brinda más información sobre el por qué) 
+        // context: null, // Encounter | Episode of care (podría ser el informe del encuentro o lo que definamos que brinda más información sobre el por qué)
         dosage: [
             {
                 text: prestacionMedicamento.valor, // indicación
-                route: { coding: [{ system: 'http://standardterms.edqm.eu', code: prestacionMedicamento._id, display: prestacionMedicamento.nombre } ]},
+                route: { coding: [{ system: 'http://standardterms.edqm.eu', code: prestacionMedicamento._id, display: prestacionMedicamento.nombre }] },
                 timing: { coding: { system: 'http://terminology.hl7.org/CodeSystem/v3-GTSAbbreviation', code: 'QD', display: 'Diario' } }
             }
         ],
@@ -44,7 +44,7 @@ export function encode(patientReference, medicationReference, prestacionMedicame
         //     start: '2015-03'
         // },
         text: {
-            status: "generated",
+            status: 'generated',
             div: `<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: Medicacion </p><p><b>meta</b>: </p><p><b>text</b>: ${prestacionMedicamento.concepto.term}</p></div>`
         }
     };
