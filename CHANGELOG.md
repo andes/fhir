@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/andes/fhir/compare/v1.3.0...v1.4.0) (2020-10-29)
+
+
+### Features
+
+* **resources:** mejoras varias y agregado de alleryIntolerance ([#10](https://github.com/andes/fhir/issues/10)) ([f9085d6](https://github.com/andes/fhir/commit/f9085d6d5f51d60f5d1cf1cac5b03fa041b5f0f5))
+
 # [1.3.0](https://github.com/andes/fhir/compare/v1.2.0...v1.3.0) (2020-08-05)
 
 
