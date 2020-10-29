@@ -183,7 +183,7 @@ export function decode(patient) {
         id: getValue(patient.identifier, makeUrl('Patient')),
         documento: getValue(patient.identifier, 'http://www.renaper.gob.ar/dni'),
         nombre: patient.name[0].given.join().replace(',', ' '),
-        apellido: patient.name[0].family.join().replace(',', ' '),
+        apellido: Array.isArray(patient.name[0].family) ? patient.name[0].family.join().replace(',', ' ') : patient.name[0].family,
         fechaNacimiento: patient.birthDate,
         genero,
         sexo,
