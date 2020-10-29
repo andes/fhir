@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/andes/fhir/compare/v1.4.0...v1.4.1) (2020-10-29)
+
+
+### Bug Fixes
+
+* **patient:** se resuleve problema en decode ([#11](https://github.com/andes/fhir/issues/11)) ([241e906](https://github.com/andes/fhir/commit/241e9060bd4eacf65bd75c55124111dd6764bb09))
+
 # [1.4.0](https://github.com/andes/fhir/compare/v1.3.0...v1.4.0) (2020-10-29)
 
 
