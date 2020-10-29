@@ -101,7 +101,6 @@ export function encode(patient) {
                         },
                     ]
                 }],
-                // [TODO] Confirmar si va el _family
             }],
             gender: genero, // male | female | other | unknown
             birthDate: patient.fechaNacimiento.toISOString().slice(0, 10),

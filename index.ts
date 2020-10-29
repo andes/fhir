@@ -9,6 +9,7 @@ import * as DocumentReference from './src/lib/document-reference';
 import * as Device from './src/lib/device';
 import * as Medication from './src/lib/medication';
 import * as MedicationStatement from './src/lib/medicationStatement';
+import * as AllergyIntolerance from './src/lib/allergyIntolerance';
 
 export { getDominio, initialize } from './src/lib/config';
 
@@ -23,5 +24,6 @@ export {
     DocumentReference,
     Device,
     Medication,
-    MedicationStatement
+    MedicationStatement,
+    AllergyIntolerance
 };

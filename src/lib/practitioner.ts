@@ -61,8 +61,8 @@ export function encode(practitioner) {
                 }],
                 name: {
                     resourceType: 'HumanName',
-                    family: unaRelacion.apellido,
-                    given: [unaRelacion.nombre],
+                    family: unaRelacion.apellido.split(' '),
+                    given: unaRelacion.nombre.split(' '),
                 }
             };
             return relacion;
@@ -129,8 +129,8 @@ export function encode(practitioner) {
             active: data.habilitado ? data.habilitado : null,
             name: [{
                 resourceType: 'HumanName',
-                family: data.apellido,
-                given: data.nombre,
+                family: data.apellido.split(' '),
+                given: data.nombre.split(' '),
             }],
             gender: genero,
             birthDate: data.fechaNacimiento,

@@ -46,7 +46,7 @@ export function encode(patientReference, nomivac) {
         location: {
             reference: 'http://argentina.gob.ar/salud/refes/14999912399913'
         },
-        lotNumber: null,
+        // lotNumber: null,
         vaccinationProtocol: [
             {
                 doseSequence: 1,
