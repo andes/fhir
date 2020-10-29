@@ -8,11 +8,12 @@ function getReference(url) {
     };
 }
 
-export function encode(ID, patientReference, custodianReference, deviceReference, medicationStatementReference, ImmunizationReferences, ConditionReferences) {
+export function encode(ID, patientReference, custodianReference, deviceReference, medicationStatementReference, ImmunizationReferences, AllergyIntoleranceReferences, ConditionReferences) {
     const now = moment();
     let Immunization: any = [];
     let conditions: any = [];
     let medications: any = [];
+    let allergyIntolerance = [];
 
     if (ImmunizationReferences.length > 0) {
         Immunization = [{
@@ -36,11 +37,10 @@ export function encode(ID, patientReference, custodianReference, deviceReference
     if (medicationStatementReference.length > 0) {
         medications = [{
             title: 'Medicamentos',
-            text: null,
-            // text: {
-            //     'status': 'additional',
-            //     'div': '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml"> <table> <thead> <tr> <th>Medicamento<\/th> <th>Strength<\/th> <th>Forma<\/th> <th>Dosis<\/th> <th>Comentario<\/th> <\/tr> <\/thead> <tbody> <tr> <td>salbutamol (sustancia)<\/td> <td>200 mcg<\/td> <td>disparo<\/td> <td>uno por día<\/td> <td>tratamiento de asma<\/td> <\/tr> <\/tbody> <\/table> <\/div>'
-            // },
+            text: {
+                status: 'generated',
+                div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Registro de medicamentos<\/div>'
+            },
             code: {
                 coding: [
                     {
@@ -52,6 +52,25 @@ export function encode(ID, patientReference, custodianReference, deviceReference
             },
             entry: medicationStatementReference.map(getReference),
         }];
+    }
+    if (AllergyIntoleranceReferences.length > 0) {
+        allergyIntolerance = [{
+            title: 'Alergias o Intolerancias',
+            text: {
+                status: 'generated',
+                div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Registro de Alergias<\/div>'
+            },
+            code: {
+                coding: [
+                    {
+                        system: 'http:\/\/loinc.org',
+                        display: 'Allergies and/or adverse reactions',
+                        code: '48765-2'
+                    }
+                ]
+            },
+            entry: AllergyIntoleranceReferences.map(getReference),
+        }]
     }
     if (ConditionReferences.length > 0) {
         conditions = [{
@@ -68,11 +87,10 @@ export function encode(ID, patientReference, custodianReference, deviceReference
             title: 'Problemas activos',
             text: {
                 status: 'generated',
-                div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">asma (trastorno)<\/div>'
+                div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Lista de problemas activos (trastornos)<\/div>'
             }
         }];
     }
-
 
     return {
         id: ID,
@@ -82,7 +100,8 @@ export function encode(ID, patientReference, custodianReference, deviceReference
         section: [
             ...conditions,
             ...medications,
-            ...Immunization
+            ...Immunization,
+            ...allergyIntolerance
 
         ],
         resourceType: 'Composition',
@@ -101,20 +120,20 @@ export function encode(ID, patientReference, custodianReference, deviceReference
                 }
             ]
         },
-        title: 'Resumen del paciente al ' + now.format('DD [de] MMMM [de] YYYY, HH:mm'),
+        title: 'Resumen del paciente al ' + now.format('DD/MM/YYYY, HH:mm'),
         identifier: {
             system: makeUrl('Composition'),
             value: ID
         },
         date: now,
-        meta: {
-            profile: [
-                'http:\/\/hl7.org\/fhir\/uv\/ips\/StructureDefinition\/composition-uv-ips'
-            ]
-        },
+        // meta: {
+        //     profile: [
+        //         'http:\/\/hl7.org\/fhir\/uv\/ips\/StructureDefinition\/composition-uv-ips'
+        //     ]
+        // },
         text: {
             status: 'generated',
-            div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml"><p><b>Generated Narrative with Details<\/b><\/p><p><b>id<\/b>: IPS-examples-Composition-01<\/p><p><b>meta<\/b>: <\/p><p><b>text<\/b>: <\/p><p><b>identifier<\/b>: 10501<\/p><p><b>status<\/b>: FINAL<\/p><p><b>type<\/b>: Patient Summary <span style="background: LightGoldenRodYellow">(Details : {LOINC code \'60591-5\' = \'Patient summary Document\', given as \'Patient Summary\'})<\/span><\/p><p><b>date<\/b>: 26\/01\/2018 14:30:00 PM<\/p><p><b>author<\/b>: <a href="#device_IPS-examples-Device-01">Generated Summary: id: IPS-examples-Device-01; Sistema HCE del Hospital Municipal Dr Angel Pintos <\/a><\/p><p><b>title<\/b>: Patient Summary as of January 26, 2018 14:30<\/p><p><b>confidentiality<\/b>: N<\/p><blockquote><p><b>attester<\/b><\/p><p><b>mode<\/b>: LEGAL<\/p><p><b>time<\/b>: 26\/01\/2018 2:30:00 PM<\/p><p><b>party<\/b>: <a href="#organization_IPS-examples-Organization-01">Generated Summary: id: IPS-examples-Organization-01; 14999912399913; active; Hospital Municipal Hospital Doctor Ángel Pintos <\/a><\/p><\/blockquote><p><b>custodian<\/b>: <a href="#organization_IPS-examples-Organization-01">Generated Summary: id: IPS-examples-Organization-01; http://hospitalPintos.org.ar; active; name: Hospital Municipal Hospital Doctor Ángel Pintos \/ Dominio; ph: +54 02281 43-5200(WORK)<\/a><\/p><\/div>'
+            div: '<div xmlns=\"http://www.w3.org/1999/xhtml\">IPS Neuquen</div>'
         },
         custodian: {
             reference: custodianReference
