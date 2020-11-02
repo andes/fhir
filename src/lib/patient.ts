@@ -103,7 +103,7 @@ export function encode(patient) {
                 }],
             }],
             gender: genero, // male | female | other | unknown
-            birthDate: patient.fechaNacimiento.toISOString().slice(0, 10),
+            birthDate: patient.fechaNacimiento ? patient.fechaNacimiento.toISOString().slice(0, 10) : null
         };
         if (patient.fechaFallecimiento) {
             pacienteFHIR.deceasedDateTime = patient.fechaFallecimiento.toISOString().slice(0, 10);
