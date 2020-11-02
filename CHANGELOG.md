@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/andes/fhir/compare/v1.4.1...v1.4.2) (2020-11-02)
+
+
+### Bug Fixes
+
+* **patient:** verificar si el paciente no tiene fecha nacimiento ([#12](https://github.com/andes/fhir/issues/12)) ([3b39e05](https://github.com/andes/fhir/commit/3b39e056b98a7ad79985e31bb4efe75d5e700a71))
+
 ## [1.4.1](https://github.com/andes/fhir/compare/v1.4.0...v1.4.1) (2020-10-29)
 
 
