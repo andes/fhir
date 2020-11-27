@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/andes/fhir/compare/v1.4.2...v1.4.3) (2020-11-27)
+
+
+### Bug Fixes
+
+* **patient:** fix en fecha de nacimiento y de fallecimiento ([#13](https://github.com/andes/fhir/issues/13)) ([6bac05a](https://github.com/andes/fhir/commit/6bac05a982b5c0990eab2d2420b96ee0ba1d564a))
+
 ## [1.4.2](https://github.com/andes/fhir/compare/v1.4.1...v1.4.2) (2020-11-02)
 
 
