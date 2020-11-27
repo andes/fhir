@@ -103,10 +103,10 @@ export function encode(patient) {
                 }],
             }],
             gender: genero, // male | female | other | unknown
-            birthDate: patient.fechaNacimiento ? patient.fechaNacimiento.toISOString().slice(0, 10) : null
+            birthDate: patient.fechaNacimiento ? typeof patient.fechaNacimiento === 'string' ? new Date(patient.fechaNacimiento).toISOString().slice(0, 10) : patient.fechaNacimiento.toISOString().slice(0, 10) : null
         };
         if (patient.fechaFallecimiento) {
-            pacienteFHIR.deceasedDateTime = patient.fechaFallecimiento.toISOString().slice(0, 10);
+            pacienteFHIR.deceasedDateTime = typeof patient.fechaFallecimiento === 'string' ? new Date(patient.fechaFallecimiento.toISOString().slice(0, 10)) : patient.fechaFallecimiento.toISOString().slice(0, 10);
         }
         if (patient.estadoCivil) {
             let estadoCivil;
