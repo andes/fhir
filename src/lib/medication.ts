@@ -17,11 +17,11 @@ export function encode(medication) {
             coding: [
                 {
                     system: 'http://snomed.info/sct',
-                    display: medication.fsn.term,
+                    display: medication.term,
                     code: medication.conceptId
                 }
             ],
-            text: medication.pt.term
+            text: medication.fsn
         },
         status: medication.active === true ? 'active' : 'inactive',
         // manufacturer: null,
