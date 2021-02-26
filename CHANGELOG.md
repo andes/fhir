@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/andes/fhir/compare/v1.5.0...v1.6.0) (2021-02-26)
+
+
+### Features
+
+* **medicationRequest:** Add path medication request ([a6ca080](https://github.com/andes/fhir/commit/a6ca080c474b9f0c5cb6b8598f168ca5d2ad6779))
+
 # [1.5.0](https://github.com/andes/fhir/compare/v1.4.3...v1.5.0) (2021-02-26)
 
 
