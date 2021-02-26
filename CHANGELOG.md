@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/andes/fhir/compare/v1.4.3...v1.5.0) (2021-02-26)
+
+
+### Features
+
+* **medicationRequest:** create and add some properties to this fhir resource ([#14](https://github.com/andes/fhir/issues/14)) ([9d4bb01](https://github.com/andes/fhir/commit/9d4bb01a271bb2e1a36c3ee8ae76f1553d1b2ec3))
+
 ## [1.4.3](https://github.com/andes/fhir/compare/v1.4.2...v1.4.3) (2020-11-27)
 
 
