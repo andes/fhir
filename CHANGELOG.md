@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/andes/fhir/compare/v1.6.0...v1.7.0) (2021-04-06)
+
+
+### Features
+
+* **unitTesting:** First steps unit testing ([#15](https://github.com/andes/fhir/issues/15)) ([d65d0fa](https://github.com/andes/fhir/commit/d65d0fa77d38a87daae6b16fd443d2ddbfbc52e3))
+
 # [1.6.0](https://github.com/andes/fhir/compare/v1.5.0...v1.6.0) (2021-02-26)
 
 
