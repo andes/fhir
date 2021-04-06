@@ -11,6 +11,7 @@
     "lint": "tslint --project .",
     "start": "node index.js",
     "tsc": "tsc",
+    "test": "npx jest --watch",
     "tsc:w": "tsc -w",
     "prepublishOnly": "rm -rf dist && tsc -p ./ --outDir dist/",
     "semantic-release": "semantic-release"
@@ -19,10 +20,13 @@
   "devDependencies": {
     "@semantic-release/changelog": "^3.0.6",
     "@semantic-release/git": "^7.0.18",
+    "@types/jest": "^26.0.22",
     "@types/node": "^6.0.117",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
+    "jest": "^26.6.3",
     "semantic-release": "^17.0.2",
+    "ts-jest": "^26.5.4",
     "ts-node": "~3.0.4",
     "tslint": "^5.20.1",
     "tslint-eslint-rules": "^5.4.0",
