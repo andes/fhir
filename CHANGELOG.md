@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/andes/fhir/compare/v1.7.0...v1.8.0) (2021-04-14)
+
+
+### Features
+
+* **patient:** add some test ([#17](https://github.com/andes/fhir/issues/17)) ([80bc576](https://github.com/andes/fhir/commit/80bc576e58bdbb0a5a028fb073b31d6c0b431bc6))
+
 # [1.7.0](https://github.com/andes/fhir/compare/v1.6.0...v1.7.0) (2021-04-06)
 
 
