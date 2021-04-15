@@ -1,5 +1,5 @@
 
-import * as moment from 'moment';
+import moment from 'moment';
 import { makeUrl } from './config';
 
 function getReference(url) {

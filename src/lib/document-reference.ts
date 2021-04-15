@@ -1,12 +1,12 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import { makeUrl } from './config';
 
 export function encode(ID, author, organization, patient, binaryURL) {
     return {
-        resourceType : 'DocumentReference',
-        id : ID,
-        meta : {
-            lastUpdated : moment().format()
+        resourceType: 'DocumentReference',
+        id: ID,
+        meta: {
+            lastUpdated: moment().format()
         },
         contained: [
             {
