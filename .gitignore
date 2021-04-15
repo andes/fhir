@@ -21,3 +21,6 @@ node_modules
 typings
 typings/*
 .vscode
+
+# Coverage
+coverage

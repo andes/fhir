@@ -11,7 +11,7 @@
     "lint": "tslint --project .",
     "start": "node index.js",
     "tsc": "tsc",
-    "test": "npx jest --watch",
+    "test": "npx jest --coverage",
     "tsc:w": "tsc -w",
     "prepublishOnly": "rm -rf dist && tsc -p ./ --outDir dist/",
     "semantic-release": "semantic-release"
@@ -30,7 +30,7 @@
     "ts-node": "~3.0.4",
     "tslint": "^5.20.1",
     "tslint-eslint-rules": "^5.4.0",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.9"
   },
   "dependencies": {
     "moment": "^2.24.0"
