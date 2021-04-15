@@ -13,6 +13,8 @@ logs
 **.js
 *.map
 **.map
+# Javascript versioning
+!jest.config.js
 
 !swagger/static*/*.js
 
