@@ -7,6 +7,9 @@
   },
   "author": "Red TICs",
   "license": "GPL-3.0",
+  "jest": {
+    "verbose": true
+  },
   "scripts": {
     "lint": "tslint --project .",
     "start": "node index.js",
@@ -33,6 +36,7 @@
     "typescript": "^3.9.9"
   },
   "dependencies": {
+    "@jest/types": "^26.6.2",
     "moment": "^2.24.0"
   },
   "release": {
