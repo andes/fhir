@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/andes/fhir/compare/v1.8.0...v1.8.1) (2021-04-15)
+
+
+### Bug Fixes
+
+* **moment:** Correct moment sintax ([0624910](https://github.com/andes/fhir/commit/062491018912e01dee9ef6d69e54d940c9213e33))
+
 # [1.8.0](https://github.com/andes/fhir/compare/v1.7.0...v1.8.0) (2021-04-14)
 
 
