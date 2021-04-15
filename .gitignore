@@ -15,8 +15,10 @@ logs
 **.map
 # Javascript versioning
 !jest.config.js
-
 !swagger/static*/*.js
+
+# Dist
+dist
 
 # Dependency directories
 node_modules
