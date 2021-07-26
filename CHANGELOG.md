@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/andes/fhir/compare/v1.8.1...v1.8.2) (2021-07-26)
+
+
+### Bug Fixes
+
+* error en relaciones nulas ([0976888](https://github.com/andes/fhir/commit/09768885f87385bad2af3c23e61630958290a834))
+
 ## [1.8.1](https://github.com/andes/fhir/compare/v1.8.0...v1.8.1) (2021-04-15)
 
 
