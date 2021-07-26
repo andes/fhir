@@ -1,4 +1,4 @@
-import patient from '../data/patient.json';
+import * as patient from '../data/patient.json';
 import { encode } from './patient';
 describe('encode patient from ANDES to FHIR R4', () => {
     test('Verify basic data', () => {

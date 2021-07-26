@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import { makeUrl } from './config';
 
 export function encode(ID, resources) {
