@@ -57,7 +57,7 @@ export function encode(patient) {
             return direc;
         }) : [];
         // Parsea relaciones
-        let relaciones = patient.relaciones ? patient.relaciones.map(unaRelacion => {
+        let relaciones = patient.relaciones ? patient.relaciones.filter(r => !!r.relacion).map(unaRelacion => {
             let relacion = {
                 relationship: [{
                     text: unaRelacion.relacion.nombre
