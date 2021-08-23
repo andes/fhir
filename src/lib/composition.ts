@@ -15,82 +15,77 @@ export function encode(ID, patientReference, custodianReference, deviceReference
     let medications: any = [];
     let allergyIntolerance = [];
 
-    if (ImmunizationReferences.length > 0) {
-        Immunization = [{
-            title: 'Vacunas',
-            text: {
-                status: 'generated',
-                div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">producto que contiene solamente antígeno de virus de la influenza (producto medicinal)<\/div>'
-            },
-            code: {
-                coding: [
-                    {
-                        system: 'http:\/\/loinc.org',
-                        display: 'Immunization record',
-                        code: '60484-3'
-                    }
-                ]
-            },
-            entry: ImmunizationReferences.map(getReference)
-        }];
-    }
-    if (medicationStatementReference.length > 0) {
-        medications = [{
-            title: 'Medicamentos',
-            text: {
-                status: 'generated',
-                div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Registro de medicamentos<\/div>'
-            },
-            code: {
-                coding: [
-                    {
-                        system: 'http:\/\/loinc.org',
-                        display: 'Medication use',
-                        code: '10160-0'
-                    }
-                ]
-            },
-            entry: medicationStatementReference.map(getReference),
-        }];
-    }
-    if (AllergyIntoleranceReferences.length > 0) {
-        allergyIntolerance = [{
-            title: 'Alergias o Intolerancias',
-            text: {
-                status: 'generated',
-                div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Registro de Alergias<\/div>'
-            },
-            code: {
-                coding: [
-                    {
-                        system: 'http:\/\/loinc.org',
-                        display: 'Allergies and/or adverse reactions',
-                        code: '48765-2'
-                    }
-                ]
-            },
-            entry: AllergyIntoleranceReferences.map(getReference),
-        }];
-    }
-    if (ConditionReferences.length > 0) {
-        conditions = [{
-            code: {
-                coding: [
-                    {
-                        system: 'http:\/\/loinc.org',
-                        display: 'Problem list',
-                        code: '11450-4'
-                    }
-                ]
-            },
-            entry: ConditionReferences.map(getReference),
-            title: 'Problemas activos',
-            text: {
-                status: 'generated',
-                div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Lista de problemas activos (trastornos)<\/div>'
-            }
-        }];
-    }
+    Immunization = [{
+        title: 'Vacunas',
+        text: {
+            status: 'generated',
+            div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Sección referida a la vacunación del paciente <\/div>'
+        },
+        code: {
+            coding: [
+                {
+                    system: 'http:\/\/loinc.org',
+                    display: 'Immunization record',
+                    code: '60484-3'
+                }
+            ]
+        },
+        entry: ImmunizationReferences ? ImmunizationReferences.map(getReference) : []
+    }];
+
+    medications = [{
+        title: 'Medicamentos',
+        text: {
+            status: 'generated',
+            div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Registro de medicamentos<\/div>'
+        },
+        code: {
+            coding: [
+                {
+                    system: 'http:\/\/loinc.org',
+                    display: 'Medication use',
+                    code: '10160-0'
+                }
+            ]
+        },
+        entry: medicationStatementReference ? medicationStatementReference.map(getReference) : [],
+    }];
+
+    allergyIntolerance = [{
+        title: 'Alergias o Intolerancias',
+        text: {
+            status: 'generated',
+            div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Registro de Alergias<\/div>'
+        },
+        code: {
+            coding: [
+                {
+                    system: 'http:\/\/loinc.org',
+                    display: 'Allergies and/or adverse reactions',
+                    code: '48765-2'
+                }
+            ]
+        },
+        entry: AllergyIntoleranceReferences ? AllergyIntoleranceReferences.map(getReference) : [],
+    }];
+
+    conditions = [{
+        code: {
+            coding: [
+                {
+                    system: 'http:\/\/loinc.org',
+                    display: 'Problem list',
+                    code: '11450-4'
+                }
+            ]
+        },
+        entry: ConditionReferences ? ConditionReferences.map(getReference) : [],
+        title: 'Problemas activos',
+        text: {
+            status: 'generated',
+            div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Lista de problemas activos (trastornos)<\/div>'
+        }
+    }];
 
     return {
         id: ID,
@@ -136,7 +131,7 @@ export function encode(ID, patientReference, custodianReference, deviceReference
             div: '<div xmlns=\"http://www.w3.org/1999/xhtml\">IPS Neuquen</div>'
         },
         custodian: {
-            reference: custodianReference
+            identifier: custodianReference
         },
         attester: [
             {
