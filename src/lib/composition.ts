@@ -131,7 +131,10 @@ export function encode(ID, patientReference, custodianReference, deviceReference
             div: '<div xmlns=\"http://www.w3.org/1999/xhtml\">IPS Neuquen</div>'
         },
         custodian: {
-            identifier: custodianReference
+            identifier: {
+                system: 'https://federador.msal.gob.ar/uri',
+                value: custodianReference
+            }
         },
         attester: [
             {
