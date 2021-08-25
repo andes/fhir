@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/andes/fhir/compare/v1.9.0...v1.10.0) (2021-08-25)
+
+
+### Features
+
+* **composition:** ajuste de custodian ([2069e81](https://github.com/andes/fhir/commit/2069e8120e64c5f59d47ce2cfa97644b54d3e6c7))
+
 # [1.9.0](https://github.com/andes/fhir/compare/v1.8.3...v1.9.0) (2021-08-23)
 
 
