@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/andes/fhir/compare/v1.10.0...v1.11.0) (2021-08-31)
+
+
+### Features
+
+* add organization to document reference ([51cbd96](https://github.com/andes/fhir/commit/51cbd962d207479812298704a9d221d3f210b32c))
+
 # [1.10.0](https://github.com/andes/fhir/compare/v1.9.0...v1.10.0) (2021-08-25)
 
 
