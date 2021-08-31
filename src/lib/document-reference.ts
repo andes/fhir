@@ -26,6 +26,12 @@ export function encode(ID, author, organization, patient, binaryURL) {
                 }]
             }
         ],
+        custodian: {
+            identifier: {
+                system: 'https://federador.msal.gob.ar/uri',
+                value: makeUrl('Organization', organization.id)
+            }
+        },
         masterIdentifier: {
             system: makeUrl('documentos_versiones'),
             value: ID
