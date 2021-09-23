@@ -102,7 +102,10 @@ export function encode(ID, patientReference, custodianReference, deviceReference
         resourceType: 'Composition',
         author: [
             {
-                reference: deviceReference
+                identifier: {
+                    system: 'https://federador.msal.gob.ar/uri',
+                    value: deviceReference
+                }
             }
         ],
         confidentiality: 'N',

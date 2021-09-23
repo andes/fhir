@@ -52,14 +52,14 @@ export function encode(ID, author, organization, patient, binaryURL) {
         subject: {
             reference: makeUrl('Patient', patient.id),
         },
-        author: [
-            {
-                reference: makeUrl('Device', author.id),
-            },
-            {
-                reference: makeUrl('Organization', organization.id),
-            }
-        ],
+        // author: [
+        //     {
+        //         reference: makeUrl('Device', author.id),
+        //     },
+        //     {
+        //         reference: makeUrl('Organization', organization.id),
+        //     }
+        // ],
         securityLabel: [{
             coding: [{
                 system: 'https://saludddigital.gob.ar/nivelesconfidencialidad',
