@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/andes/fhir/compare/v1.11.0...v1.11.1) (2021-09-23)
+
+
+### Bug Fixes
+
+* **document-reference:** ajustes author ([429d86c](https://github.com/andes/fhir/commit/429d86c7dffd7b7562450746e75352b5d65cf478))
+
 # [1.11.0](https://github.com/andes/fhir/compare/v1.10.0...v1.11.0) (2021-08-31)
 
 
