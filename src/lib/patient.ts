@@ -103,7 +103,11 @@ export function encode(patient) {
                 }],
             }],
             gender: genero, // male | female | other | unknown
-            birthDate: patient.fechaNacimiento ? typeof patient.fechaNacimiento === 'string' ? new Date(patient.fechaNacimiento).toISOString().slice(0, 10) : patient.fechaNacimiento.toISOString().slice(0, 10) : null
+            birthDate: patient.fechaNacimiento ? typeof patient.fechaNacimiento === 'string' ? new Date(patient.fechaNacimiento).toISOString().slice(0, 10) : patient.fechaNacimiento.toISOString().slice(0, 10) : null,
+            extension: [{
+                url: 'andes.gob.ar/fhir/StructureDefinition/patient-status',
+                valueCode: patient.estado ? patient.estado : 'temporal' // validado | temporal
+            }]
         };
         if (patient.fechaFallecimiento) {
             pacienteFHIR.deceasedDateTime = typeof patient.fechaFallecimiento === 'string' ? new Date(patient.fechaFallecimiento.toISOString().slice(0, 10)) : patient.fechaFallecimiento.toISOString().slice(0, 10);

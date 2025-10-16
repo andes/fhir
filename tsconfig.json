@@ -18,6 +18,10 @@
       "dom"
     ],
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": [
+      "node",
+      "jest"
+    ]
   }
 }
