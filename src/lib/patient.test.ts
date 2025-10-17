@@ -36,7 +36,7 @@ describe('encode patient from ANDES to FHIR R4', () => {
         expect(encode(patient).contact[0].name.family).toContain('PERINGA');
         expect(encode(patient).contact[0].name.given).toContain('JOSEFINA');
     });
-    
+
     test('Maneja paciente con estado temporal', () => {
         const paciente = createPatient({ estado: 'temporal' });
         const fhir = encode(paciente);
