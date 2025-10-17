@@ -1,5 +1,5 @@
 import * as patient from '../data/patient.json';
-import { encode } from './patient';
+import { decode, encode } from './patient';
 import { createPatient } from '../helpers/patientFactory';
 
 describe('encode patient from ANDES to FHIR R4', () => {
@@ -37,6 +37,12 @@ describe('encode patient from ANDES to FHIR R4', () => {
         expect(encode(patient).contact[0].name.given).toContain('JOSEFINA');
     });
 
+    test('Maneja paciente con estado validado', () => {
+        const paciente = createPatient({ estado: 'validado' });
+        const fhir = encode(paciente);
+        expect(fhir.extension?.some(t => t.valueCode === 'validado')).toBeTruthy();
+    });
+
     test('Maneja paciente con estado temporal', () => {
         const paciente = createPatient({ estado: 'temporal' });
         const fhir = encode(paciente);
@@ -48,5 +54,9 @@ describe('encode patient from ANDES to FHIR R4', () => {
         const fhir = encode(paciente);
         expect(fhir.extension?.some(t => t.valueCode === 'temporal')).toBeTruthy();
     });
-});
 
+    it('Verifica organización que crea paciente', () => {
+        const fhir = encode(patient);
+        expect(fhir.managingOrganization.display).toContain('LABORATORIO');
+    });
+});
