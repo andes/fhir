@@ -49,9 +49,9 @@ describe('encode patient from ANDES to FHIR R4', () => {
         expect(fhir.extension?.some(t => t.valueCode === 'temporal')).toBeTruthy();
     });
 
-    test('Verifica que no exsita la extension _family', ()=> {
+    test('Verifica que no exsita la extension _family', () => {
         const paciente = createPatient();
         const fhir = encode(paciente);
-        expect(fhir.extension?.some(t=> t._family)).toBe(false);
+        expect(fhir.extension?.some(t => t._family)).toBe(false);
     });
 });
