@@ -4,6 +4,7 @@ import { getDominio, makeUrl } from './config';
 /**
  * Encode a patient from ANDES to FHIR
  * @param {} patient
+ * una prueba
  */
 export function encode(patient) {
     if (patient) {
