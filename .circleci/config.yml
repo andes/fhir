@@ -5,6 +5,9 @@ jobs:
     docker:
       - image: 'circleci/node:14'
     steps:
+      - run:
+          name: Use HTTPS for GitHub
+          command: git config --global url."https://github.com/".insteadOf "git@github.com:"
       - checkout
       - restore_cache:
           keys:
