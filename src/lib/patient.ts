@@ -92,15 +92,7 @@ export function encode(patient) {
                 resourceType: 'HumanName',
                 family: patient.apellido.split(' '),
                 given: patient.nombre.split(' '),
-                text: `${patient.nombre} ${patient.apellido}`,
-                _family: [{
-                    extension: [
-                        {
-                            url: 'http://hl7.org/fhir/StructureDefinition/humanname-fathers-family',
-                            valueString: patient.apellido
-                        },
-                    ]
-                }],
+                text: `${patient.nombre} ${patient.apellido}`
             }],
             gender: genero, // male | female | other | unknown
             birthDate: patient.fechaNacimiento ? typeof patient.fechaNacimiento === 'string' ? new Date(patient.fechaNacimiento).toISOString().slice(0, 10) : patient.fechaNacimiento.toISOString().slice(0, 10) : null,
