@@ -2,13 +2,13 @@ name: BUILD AND TEST
 on: [push]
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         steps:
             - uses: actions/checkout@v1
             - name: Use Node.js
               uses: actions/setup-node@v1
               with:
-                  node-version: '10.x'
+                  node-version: '22.x'
             - run: npm ci
             - run: npm run lint
             - run: npm test

@@ -1,5 +1,7 @@
 import * as patient from '../data/patient.json';
 import { encode } from './patient';
+import { createPatient } from '../helpers/patientFactory';
+
 describe('encode patient from ANDES to FHIR R4', () => {
     test('Verify basic data', () => {
         expect(encode(patient).resourceType).toBe('Patient');
@@ -34,5 +36,22 @@ describe('encode patient from ANDES to FHIR R4', () => {
         expect(encode(patient).contact[0].name.family).toContain('PERINGA');
         expect(encode(patient).contact[0].name.given).toContain('JOSEFINA');
     });
-});
 
+    test('Maneja paciente con estado temporal', () => {
+        const paciente = createPatient({ estado: 'temporal' });
+        const fhir = encode(paciente);
+        expect(fhir.extension?.some(t => t.valueCode === 'temporal')).toBeTruthy();
+    });
+
+    test('Maneja paciente con estado nulo', () => {
+        const paciente = createPatient({ estado: null });
+        const fhir = encode(paciente);
+        expect(fhir.extension?.some(t => t.valueCode === 'temporal')).toBeTruthy();
+    });
+
+    test('Verifica que no exsita la extension _family', () => {
+        const paciente = createPatient();
+        const fhir = encode(paciente);
+        expect(fhir.extension?.some(t => t._family)).toBe(false);
+    });
+});
