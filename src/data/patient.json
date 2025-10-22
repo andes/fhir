@@ -181,5 +181,11 @@
     "tipoIdentificacion": null,
     "fotoId": "6046105c18944f849e9fe315",
     "documentos": [],
-    "fechaFallecimiento": null
+    "fechaFallecimiento": null,
+    "createdBy": {
+        "organizacion": {
+            "id": "50580352367779",
+            "nombre": "LABORATORIO RAÑA - SERVICIOS MEDICOS"
+        }
+    }
 }

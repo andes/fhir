@@ -103,7 +103,11 @@ export function encode(patient) {
                 }],
             }],
             gender: genero, // male | female | other | unknown
-            birthDate: patient.fechaNacimiento ? typeof patient.fechaNacimiento === 'string' ? new Date(patient.fechaNacimiento).toISOString().slice(0, 10) : patient.fechaNacimiento.toISOString().slice(0, 10) : null
+            birthDate: patient.fechaNacimiento ? typeof patient.fechaNacimiento === 'string' ? new Date(patient.fechaNacimiento).toISOString().slice(0, 10) : patient.fechaNacimiento.toISOString().slice(0, 10) : null,
+            extension: [{
+                url: 'andes.gob.ar/fhir/StructureDefinition/patient-status',
+                valueCode: patient.estado ? patient.estado : 'temporal' // validado | temporal
+            }]
         };
         if (patient.fechaFallecimiento) {
             pacienteFHIR.deceasedDateTime = typeof patient.fechaFallecimiento === 'string' ? new Date(patient.fechaFallecimiento.toISOString().slice(0, 10)) : patient.fechaFallecimiento.toISOString().slice(0, 10);
@@ -145,6 +149,11 @@ export function encode(patient) {
         if (relaciones.length > 0) { // A contact party (e.g. guardian, partner, friend) for the patient
             pacienteFHIR['contact'] = relaciones;
         }
+        let managingOrganization = {
+            reference: patient.createdBy.organizacion.id,
+            display: patient.createdBy.organizacion.nombre
+        };
+        pacienteFHIR['managingOrganization'] = managingOrganization;
         return pacienteFHIR;
     } else {
         return null;
@@ -156,8 +165,8 @@ export function encode(patient) {
  * @param {} patient
  */
 export function decode(patient) {
-    let genero;
-    let sexo;
+    let genero: string;
+    let sexo: string;
     // Cuando el paciente viene por FHIR suponemos el valor del genero tanto para nuestro field genero como sexo
     switch (patient.gender) {
         case 'female':
@@ -187,7 +196,8 @@ export function decode(patient) {
         fechaNacimiento: patient.birthDate,
         genero,
         sexo,
-        estado: 'temporal' // Todos los pacientes que recibimos por Fhir son considerados temporales en su conversión.
+        estado: 'temporal', // Todos los pacientes que recibimos por Fhir son considerados temporales en su conversión.
+        createdBy: null
     };
     let contactos = patient.telecom ? patient.telecom.map(unContacto => {
         let cont = {
@@ -270,8 +280,18 @@ export function decode(patient) {
         pacienteAndes['relaciones'] = relaciones;
     }
 
+    if (patient.managingOrganization) {
+        pacienteAndes['createdBy'] = {
+            organizacion: {
+                id: patient.managingOrganization.reference,
+                nombre: patient.managingOrganization.display
+            }
+        };
+    }
+
     return pacienteAndes;
 }
+
 /**
  * Verify if a patient has a FHIR format
  * @param {*} patient

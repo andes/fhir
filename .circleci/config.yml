@@ -3,8 +3,11 @@ jobs:
   install:
     working_directory: ~/fhir
     docker:
-      - image: 'circleci/node:14'
+      - image: 'cimg/node:22.11'
     steps:
+      - run:
+          name: Use HTTPS for GitHub
+          command: git config --global url."https://github.com/".insteadOf "git@github.com:"
       - checkout
       - restore_cache:
           keys:
@@ -27,7 +30,7 @@ jobs:
   build:
     working_directory: ~/fhir
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:22.11
     steps:
       - attach_workspace:
           at: ~/
@@ -40,7 +43,7 @@ jobs:
   deploy:
     working_directory: ~/fhir
     docker:
-      - image: 'circleci/node:14'
+      - image: 'cimg/node:22.11'
     steps:
       - attach_workspace:
           at: ~/
@@ -62,8 +65,8 @@ workflows:
             branches:
               only: master
       - deploy:
-           requires:
+          requires:
             - request-deploy
-           filters:
+          filters:
             branches:
               only: master
