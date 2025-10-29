@@ -16,6 +16,7 @@ logs
 # Javascript versioning
 !jest.config.js
 !swagger/static*/*.js
+!release.config.js
 
 # Dist
 dist
