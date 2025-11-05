@@ -1,3 +1,17 @@
+# Changelog
+
+# [1.12.0-beta.1](https://github.com/andes/fhir/compare/v1.11.1...v1.12.0-beta.1) (2025-11-05)
+
+
+### Bug Fixes
+
+* agrego dependencia faltante ([9e9687a](https://github.com/andes/fhir/commit/9e9687adc6995ee06922e1b943301858d7046313))
+
+
+### Features
+
+* bump manual a version 1.12 ([f3e7d0c](https://github.com/andes/fhir/commit/f3e7d0c9f1b428cb4e0868fea93f2c8b8a871f6b))
+
 ## [1.11.1](https://github.com/andes/fhir/compare/v1.11.0...v1.11.1) (2021-09-23)
 
 
