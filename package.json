@@ -16,7 +16,7 @@
     "tsc": "tsc",
     "test": "npx jest --coverage",
     "tsc:w": "tsc -w",
-    "prepublishOnly": "rm -rf dist && tsc -p ./ --outDir dist/",
+    "prepublishOnly": "rimraf dist && tsc -p ./ --outDir dist/",
     "semantic-release": "semantic-release"
   },
   "main": "./dist/index.js",
@@ -30,6 +30,7 @@
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "jest": "^26.6.3",
+    "rimraf": "^6.1.0",
     "semantic-release": "^24.2.9",
     "ts-jest": "^26.5.4",
     "ts-node": "~3.0.4",

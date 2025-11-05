@@ -3,7 +3,7 @@
  * @param {} medicationRequest
  */
 
-import * as moment from 'moment';
+import moment from 'moment';
 
 // Muy incompleto hay que mejorarlo mucho todavía
 
