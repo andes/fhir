@@ -1,5 +1,6 @@
 # Archivos de configuración
 config.private.ts
+.env
 
 # Logs
 logs
