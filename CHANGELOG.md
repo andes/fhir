@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.12.0-beta.2](https://github.com/andes/fhir/compare/v1.12.0-beta.1...v1.12.0-beta.2) (2025-11-06)
+
+
+### Features
+
+* bumb manual 1.12.1 ([b57b8c4](https://github.com/andes/fhir/commit/b57b8c41527b2df47afcdc18d82755de808f006c))
+
 # [1.12.0-beta.1](https://github.com/andes/fhir/compare/v1.11.1...v1.12.0-beta.1) (2025-11-05)
 
 
