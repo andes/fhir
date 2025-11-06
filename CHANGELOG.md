@@ -1,5 +1,13 @@
 # Changelog
 
+# [1.12.0-beta.3](https://github.com/andes/fhir/compare/v1.12.0-beta.2...v1.12.0-beta.3) (2025-11-06)
+
+
+### Features
+
+* bump manual 1.12.4 ([c21a41c](https://github.com/andes/fhir/commit/c21a41c66c716e3b0622aa9928d923dfe183dbe7))
+* quito _paciente ([4330d6a](https://github.com/andes/fhir/commit/4330d6a435581d1226878ae9fcb2f843fd0d650a))
+
 # [1.12.0-beta.2](https://github.com/andes/fhir/compare/v1.12.0-beta.1...v1.12.0-beta.2) (2025-11-06)
 
 
