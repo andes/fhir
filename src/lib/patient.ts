@@ -8,6 +8,10 @@ import { getDominio, makeUrl } from './config';
 export function encode(patient) {
     if (patient) {
         const identificadores: any = [];
+        identificadores.push({
+            system: getDominio(),
+            value: patient._id
+        });
         if (patient.documento) {
             identificadores.push({
                 system: 'http://www.renaper.gob.ar/dni',
@@ -20,10 +24,20 @@ export function encode(patient) {
                 value: patient.cuil
             });
         }
-        identificadores.push({
-            system: getDominio(),
-            value: patient._id
-        });
+        if (patient.numeroIdentificacion) {
+            if (patient.tipoIdentificacion === 'dni extranjero') {
+                identificadores.push({
+                    system: 'andes.gob.ar/sid/foreign-id',
+                    value: patient.numeroIdentificacion
+                });
+            }
+            if (patient.tipoIdentificacion === 'pasaporte') {
+                identificadores.push({
+                    system: 'andes.gob.ar/sid/passport',
+                    value: patient.numeroIdentificacion
+                });
+            }
+        }
         // Parsea contactos
         let contactos = patient.contacto ? patient.contacto.filter(c => c.valor).map(unContacto => {
             let cont = {
@@ -83,8 +97,8 @@ export function encode(patient) {
                 break;
         }
         let pacienteFHIR: any = {
-            id: patient.id,
             resourceType: 'Patient',
+            id: patient._id,
             identifier: identificadores,
             active: patient.activo ? patient.activo : null, // Whether this patient's record is in active use
             name: [{
@@ -180,9 +194,21 @@ export function decode(patient) {
             return element.value;
         }
     }
+    const tiposIdentificacion = ['andes.gob.ar/sid/foreign-id', 'andes.gob.ar/sid/passport'];
+    const tipoAndes = ['dni extranjero', 'pasaporte'];
+    let tipoIdentificacion;
+    let numeroIdentificacion;
+    for (let i = 0; i < tiposIdentificacion.length; i++) {
+        if (getValue(patient.identifier, tiposIdentificacion[i])) {
+            tipoIdentificacion = tipoAndes[i];
+            numeroIdentificacion = getValue(patient.identifier, tiposIdentificacion[i]);
+        }
+    }
     let pacienteAndes = {
         id: getValue(patient.identifier, makeUrl('Patient')),
         documento: getValue(patient.identifier, 'http://www.renaper.gob.ar/dni'),
+        tipoIdentificacion,
+        numeroIdentificacion,
         nombre: patient.name[0].given.join().replace(',', ' '),
         apellido: Array.isArray(patient.name[0].family) ? patient.name[0].family.join().replace(',', ' ') : patient.name[0].family,
         fechaNacimiento: patient.birthDate,

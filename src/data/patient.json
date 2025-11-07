@@ -179,6 +179,7 @@
     "activo": true,
     "notaError": "",
     "tipoIdentificacion": null,
+    "numeroIdentificacion": null,
     "fotoId": "6046105c18944f849e9fe315",
     "documentos": [],
     "fechaFallecimiento": null,
