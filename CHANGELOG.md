@@ -1,5 +1,21 @@
 # Changelog
 
+# [1.12.0](https://github.com/andes/fhir/compare/v1.11.1...v1.12.0) (2025-11-07)
+
+
+### Bug Fixes
+
+* agrego dependencia faltante ([9e9687a](https://github.com/andes/fhir/commit/9e9687adc6995ee06922e1b943301858d7046313))
+
+
+### Features
+
+* bumb manual 1.12.1 ([b57b8c4](https://github.com/andes/fhir/commit/b57b8c41527b2df47afcdc18d82755de808f006c))
+* bump manual 1.12.4 ([c21a41c](https://github.com/andes/fhir/commit/c21a41c66c716e3b0622aa9928d923dfe183dbe7))
+* bump manual a version 1.12 ([f3e7d0c](https://github.com/andes/fhir/commit/f3e7d0c9f1b428cb4e0868fea93f2c8b8a871f6b))
+* devolver todos los identifier ([#25](https://github.com/andes/fhir/issues/25)) ([715274b](https://github.com/andes/fhir/commit/715274bac9d54e7115a1f2de72abb2be5142f944))
+* quito _paciente ([4330d6a](https://github.com/andes/fhir/commit/4330d6a435581d1226878ae9fcb2f843fd0d650a))
+
 # [1.12.0-beta.3](https://github.com/andes/fhir/compare/v1.12.0-beta.2...v1.12.0-beta.3) (2025-11-06)
 
 
