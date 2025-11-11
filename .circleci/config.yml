@@ -3,7 +3,7 @@ jobs:
   install:
     working_directory: ~/fhir
     docker:
-      - image: 'cimg/node:22.11'
+      - image: 'cimg/node:20.19'
     steps:
       - run:
           name: Use HTTPS for GitHub
@@ -30,7 +30,7 @@ jobs:
   build:
     working_directory: ~/fhir
     docker:
-      - image: cimg/node:22.11
+      - image: cimg/node:20.19
     steps:
       - attach_workspace:
           at: ~/
@@ -43,7 +43,7 @@ jobs:
   deploy:
     working_directory: ~/fhir
     docker:
-      - image: 'cimg/node:22.11'
+      - image: 'cimg/node:20.19'
     steps:
       - attach_workspace:
           at: ~/
