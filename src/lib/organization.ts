@@ -1,13 +1,15 @@
-import { getDominio, makeUrl } from './config';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { makeUrl } from './config';
 
 /**
  * Encode a organization from ANDES to FHIR
  * @param {} organization
  */
 export function encode(organization) {
-    let data = organization;
+    const data = organization;
     if (data) {
-        let identificadores: any[] = data.codigo.sisa ? [{
+        const identificadores: any[] = data.codigo.sisa ? [{
             assigner: 'sisa',
             value: data.codigo.sisa
         }] : [];
@@ -34,8 +36,8 @@ export function encode(organization) {
             value: data._id
         });
 
-        let contactos = data.contacto ? data.contacto.map(unContacto => {
-            let cont = {
+        const contactos = data.contacto ? data.contacto.map(unContacto => {
+            const cont = {
                 resourceType: 'ContactPoint',
                 value: unContacto.valor,
                 rank: unContacto.ranking,
@@ -54,7 +56,7 @@ export function encode(organization) {
             return cont;
         }) : [];
         // Parsea direcciones
-        let direcciones = data.direccion ? [{
+        const direcciones = data.direccion ? [{
             resourceType: 'Address',
             postalCode: data.direccion.codigoPostal ? data.direccion.codigoPostal : '',
             line: [data.direccion.valor],
@@ -64,7 +66,7 @@ export function encode(organization) {
         }] : [];
 
         // Armamos la organizacion FHIR
-        let organizacionFHIR = {
+        const organizacionFHIR = {
             id: data.id,
             resourceType: 'Organization',
             identifier: identificadores,

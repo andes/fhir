@@ -45,7 +45,7 @@ export function encode(patientReference, medicationReference, prestacionMedicame
         // },
         text: {
             status: 'generated',
-            div: `<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: Medicacion </p><p><b>meta</b>: </p><p><b>text</b>: ${prestacionMedicamento.concepto.term}</p></div>`
+            div: `<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: Medicacion </p><p><b>meta</b>: </p><p><b>text</b>: ${prestacionMedicamento.concepto.term}</p></div>`
         }
     };
 }

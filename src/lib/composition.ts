@@ -1,4 +1,6 @@
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import moment from 'moment';
 import { makeUrl } from './config';
 
@@ -19,12 +21,12 @@ export function encode(ID, patientReference, custodianReference, deviceReference
         title: 'Vacunas',
         text: {
             status: 'generated',
-            div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Sección referida a la vacunación del paciente <\/div>'
+            div: '<div xmlns="http://www.w3.org/1999/xhtml">Sección referida a la vacunación del paciente </div>'
         },
         code: {
             coding: [
                 {
-                    system: 'http:\/\/loinc.org',
+                    system: 'http://loinc.org',
                     display: 'Immunization record',
                     code: '60484-3'
                 }
@@ -37,12 +39,12 @@ export function encode(ID, patientReference, custodianReference, deviceReference
         title: 'Medicamentos',
         text: {
             status: 'generated',
-            div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Registro de medicamentos<\/div>'
+            div: '<div xmlns="http://www.w3.org/1999/xhtml">Registro de medicamentos</div>'
         },
         code: {
             coding: [
                 {
-                    system: 'http:\/\/loinc.org',
+                    system: 'http://loinc.org',
                     display: 'Medication use',
                     code: '10160-0'
                 }
@@ -55,12 +57,12 @@ export function encode(ID, patientReference, custodianReference, deviceReference
         title: 'Alergias o Intolerancias',
         text: {
             status: 'generated',
-            div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Registro de Alergias<\/div>'
+            div: '<div xmlns="http://www.w3.org/1999/xhtml">Registro de Alergias</div>'
         },
         code: {
             coding: [
                 {
-                    system: 'http:\/\/loinc.org',
+                    system: 'http://loinc.org',
                     display: 'Allergies and/or adverse reactions',
                     code: '48765-2'
                 }
@@ -73,7 +75,7 @@ export function encode(ID, patientReference, custodianReference, deviceReference
         code: {
             coding: [
                 {
-                    system: 'http:\/\/loinc.org',
+                    system: 'http://loinc.org',
                     display: 'Problem list',
                     code: '11450-4'
                 }
@@ -83,7 +85,7 @@ export function encode(ID, patientReference, custodianReference, deviceReference
         title: 'Problemas activos',
         text: {
             status: 'generated',
-            div: '<div xmlns="http:\/\/www.w3.org\/1999\/xhtml">Lista de problemas activos (trastornos)<\/div>'
+            div: '<div xmlns="http://www.w3.org/1999/xhtml">Lista de problemas activos (trastornos)</div>'
         }
     }];
 
@@ -112,7 +114,7 @@ export function encode(ID, patientReference, custodianReference, deviceReference
         type: {
             coding: [
                 {
-                    system: 'http:\/\/loinc.org',
+                    system: 'http://loinc.org',
                     display: 'Patient Summary',
                     code: '60591-5'
                 }
@@ -131,7 +133,7 @@ export function encode(ID, patientReference, custodianReference, deviceReference
         // },
         text: {
             status: 'generated',
-            div: '<div xmlns=\"http://www.w3.org/1999/xhtml\">IPS Neuquen</div>'
+            div: '<div xmlns="http://www.w3.org/1999/xhtml">IPS Neuquen</div>'
         },
         custodian: {
             identifier: {
