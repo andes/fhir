@@ -13,7 +13,6 @@ describe('encode patient from ANDES to FHIR R4', () => {
         expect(id?.system).toBe('http://www.renaper.gob.ar/dni');
         expect(pacienteFhir.active).toBe(true);
         expect(pacienteFhir.name[0].use).toBe('official');
-        expect(pacienteFhir.name[0].resourceType).toBe('HumanName');
         expect(pacienteFhir.name[0].family).toContain('PERINGA');
         expect(pacienteFhir.name[0].family).toContain('PONCE');
         expect(pacienteFhir.name[0].given).toContain('AGUSTIN');
@@ -23,11 +22,9 @@ describe('encode patient from ANDES to FHIR R4', () => {
     });
     test('Verify patient with contact information', () => {
         //  Phone;
-        expect(pacienteFhir.telecom[0].resourceType).toBe('ContactPoint');
         expect(pacienteFhir.telecom[0].value).toBe('4462221');
         expect(pacienteFhir.telecom[0].system).toBe('phone');
         //   Address;
-        expect(pacienteFhir.address[0].resourceType).toBe('Address');
         expect(pacienteFhir.address[0].postalCode).toBe('8300');
         expect(pacienteFhir.address[0].line).toContain('Enrique Santos Discepolo 1856');
         expect(pacienteFhir.address[0].city).toBe('NEUQUEN');
@@ -36,7 +33,6 @@ describe('encode patient from ANDES to FHIR R4', () => {
     });
     test('Verify patient with relationships', () => {
         expect(pacienteFhir.contact[0].relationship[0].text).toBe('hijo/a');
-        expect(pacienteFhir.contact[0].name.resourceType).toBe('HumanName');
         expect(pacienteFhir.contact[0].name.family).toContain('PERINGA');
         expect(pacienteFhir.contact[0].name.given).toContain('JOSEFINA');
     });

@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { getDominio, makeUrl } from './config';
+import { Patient } from 'fhir/r4'
 
 /**
  * Encode a patient from ANDES to FHIR
  * @param {} patient
  */
-export function encode(patient) {
+export function encode(patient: any): Patient {
     if (patient) {
-        const identificadores: any = [];
+        const identificadores = [];
         identificadores.push({
             system: getDominio(),
             value: patient._id
@@ -39,8 +42,8 @@ export function encode(patient) {
             }
         }
         // Parsea contactos
-        let contactos = patient.contacto ? patient.contacto.filter(c => c.valor).map(unContacto => {
-            let cont = {
+        const contactos = patient.contacto ? patient.contacto.filter(c => c.valor).map(unContacto => {
+            const cont = {
                 resourceType: 'ContactPoint',
                 value: unContacto.valor,
                 rank: unContacto.ranking,
@@ -59,8 +62,8 @@ export function encode(patient) {
             return cont;
         }) : [];
         // Parsea direcciones
-        let direcciones = patient.direccion ? patient.direccion.filter(dir => dir.ubicacion.localidad).map(unaDireccion => {
-            let direc = {
+        const direcciones = patient.direccion ? patient.direccion.filter(dir => dir.ubicacion.localidad).map(unaDireccion => {
+            const direc = {
                 resourceType: 'Address',
                 postalCode: unaDireccion.codigoPostal ? unaDireccion.codigoPostal : '',
                 line: [unaDireccion.valor],
@@ -71,8 +74,8 @@ export function encode(patient) {
             return direc;
         }) : [];
         // Parsea relaciones
-        let relaciones = patient.relaciones ? patient.relaciones.filter(r => !!r.relacion).map(unaRelacion => {
-            let relacion = {
+        const relaciones = patient.relaciones ? patient.relaciones.filter(r => !!r.relacion).map(unaRelacion => {
+            const relacion = {
                 relationship: [{
                     text: unaRelacion.relacion.nombre
                 }], // The kind of relationship
@@ -96,14 +99,14 @@ export function encode(patient) {
                 genero = 'other';
                 break;
         }
-        let pacienteFHIR: any = {
+        const pacienteFHIR: Patient = {
             resourceType: 'Patient',
             id: patient._id,
             identifier: identificadores,
             active: patient.activo ? patient.activo : null, // Whether this patient's record is in active use
             name: [{
                 use: 'official',
-                resourceType: 'HumanName',
+                // resourceType: 'HumanName',
                 family: patient.apellido.split(' '),
                 given: patient.nombre.split(' '),
                 text: `${patient.nombre} ${patient.apellido}`
@@ -143,7 +146,7 @@ export function encode(patient) {
         }
         if (patient.foto) {
             pacienteFHIR['photo'] = [{
-                patient: patient.foto
+                data: patient.foto
             }];
         }
         if (contactos.length > 0) { // A contact detail for the individual
@@ -155,7 +158,7 @@ export function encode(patient) {
         if (relaciones.length > 0) { // A contact party (e.g. guardian, partner, friend) for the patient
             pacienteFHIR['contact'] = relaciones;
         }
-        let managingOrganization = {
+        const managingOrganization = {
             reference: patient.createdBy.organizacion.id,
             display: patient.createdBy.organizacion.nombre
         };
@@ -170,7 +173,7 @@ export function encode(patient) {
  * Decode a patient from FHIR to ANDES
  * @param {} patient
  */
-export function decode(patient) {
+export function decode(patient: Patient) {
     let genero: string;
     let sexo: string;
     // Cuando el paciente viene por FHIR suponemos el valor del genero tanto para nuestro field genero como sexo
@@ -204,7 +207,7 @@ export function decode(patient) {
             numeroIdentificacion = getValue(patient.identifier, tiposIdentificacion[i]);
         }
     }
-    let pacienteAndes = {
+    const pacienteAndes = {
         id: getValue(patient.identifier, makeUrl('Patient')),
         documento: getValue(patient.identifier, 'http://www.renaper.gob.ar/dni'),
         tipoIdentificacion,
@@ -217,8 +220,8 @@ export function decode(patient) {
         estado: 'temporal', // Todos los pacientes que recibimos por Fhir son considerados temporales en su conversión.
         createdBy: null
     };
-    let contactos = patient.telecom ? patient.telecom.map(unContacto => {
-        let cont = {
+    const contactos = patient.telecom ? patient.telecom.map(unContacto => {
+        const cont = {
             valor: unContacto.value,
             ranking: unContacto.rank
         };
@@ -233,8 +236,8 @@ export function decode(patient) {
         return cont;
     }) : [];
 
-    let relaciones = patient.contact ? patient.contact.map(aContact => {
-        let relacion = {
+    const relaciones = patient.contact ? patient.contact.map(aContact => {
+        const relacion = {
             relacion: {
                 nombre: aContact.relationship[0].text
             },
@@ -266,8 +269,8 @@ export function decode(patient) {
         pacienteAndes['estadoCivil'] = estadoCivil;
     }
 
-    let direcciones = patient.address ? patient.address.map(unaDireccion => {
-        let dir = {
+    const direcciones = patient.address ? patient.address.map(unaDireccion => {
+        const dir = {
             activo: true,
             valor: unaDireccion.line,
             codigoPostal: unaDireccion.postalCode,
@@ -316,7 +319,7 @@ export function decode(patient) {
  */
 export function verify(patient) {
     let respuesta = true;
-    let fieldVerified = Object.keys(patient).every(pacienteFHIRFields);
+    const fieldVerified = Object.keys(patient).every(pacienteFHIRFields);
     // Verificamos que las key esten contenidas en los conjuntos mínimos pacienteFHIRField
     if (fieldVerified) {
         respuesta = ('resourceType' in patient) && patient.resourceType === 'Patient';

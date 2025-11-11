@@ -1,13 +1,15 @@
-import { getDominio, makeUrl } from './config';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import { getDominio } from './config';
 
 /**
  * Encode a practitioner from ANDES to FHIR
  * @param {} practitioner
  */
 export function encode(practitioner) {
-    let data = practitioner;
+    const data = practitioner;
     if (data) {
-        let identificadores = data.documento ? [{
+        const identificadores = data.documento ? [{
             system: 'http://www.renaper.gob.ar/dni',
             value: data.documento
         }] : [];
@@ -22,8 +24,8 @@ export function encode(practitioner) {
             value: data._id
         });
         // Parsea contactos
-        let contactos = data.contacto ? data.contacto.map(unContacto => {
-            let cont = {
+        const contactos = data.contacto ? data.contacto.map(unContacto => {
+            const cont = {
                 resourceType: 'ContactPoint',
                 value: unContacto.valor,
                 rank: unContacto.ranking,
@@ -42,8 +44,8 @@ export function encode(practitioner) {
             return cont;
         }) : [];
         // Parsea direcciones
-        let direcciones = data.domicilios ? data.domicilios.map(unDomicilio => {
-            let direc = {
+        const direcciones = data.domicilios ? data.domicilios.map(unDomicilio => {
+            const direc = {
                 resourceType: 'Address',
                 postalCode: unDomicilio.codigoPostal ? unDomicilio.codigoPostal : '',
                 line: [unDomicilio.valor],
@@ -54,8 +56,8 @@ export function encode(practitioner) {
             return direc;
         }) : [];
         // Parsea relaciones
-        let relaciones = data.relaciones ? data.relaciones.map(unaRelacion => {
-            let relacion = {
+        const relaciones = data.relaciones ? data.relaciones.map(unaRelacion => {
+            const relacion = {
                 relationship: [{
                     text: unaRelacion.relacion.nombre
                 }],
@@ -67,9 +69,9 @@ export function encode(practitioner) {
             };
             return relacion;
         }) : [];
-        let matriculas = data.formacionGrado ? data.formacionGrado.map(datosGrado => {
-            let cantMatriculaciones = datosGrado.matriculacion ? datosGrado.matriculacion.length : 0;
-            let unaMatricula = {
+        const matriculas = data.formacionGrado ? data.formacionGrado.map(datosGrado => {
+            const cantMatriculaciones = datosGrado.matriculacion ? datosGrado.matriculacion.length : 0;
+            const unaMatricula = {
                 identifier: datosGrado.profesion.nombre ? [{
                     system: 'https://www.saludneuquen.gob.ar/matriculacionGrado',
                     value: datosGrado.profesion.nombre
@@ -89,9 +91,9 @@ export function encode(practitioner) {
             };
             return unaMatricula;
         }) : null;
-        let matriculasEspecialidad = (data.formacionPosgrado ? data.formacionPosgrado.map(datosPosgrado => {
-            let cantMatriculacionesEsp = datosPosgrado.matriculacion ? datosPosgrado.matriculacion.length : 0;
-            let unaMatricula = {
+        const matriculasEspecialidad = (data.formacionPosgrado ? data.formacionPosgrado.map(datosPosgrado => {
+            const cantMatriculacionesEsp = datosPosgrado.matriculacion ? datosPosgrado.matriculacion.length : 0;
+            const unaMatricula = {
                 identifier: datosPosgrado.especialidad.nombre ? [{
                     system: 'https://www.saludneuquen.gob.ar/matriculacionEspecialidad/',
                     value: datosPosgrado.especialidad.nombre
@@ -123,7 +125,7 @@ export function encode(practitioner) {
                 genero = 'other';
                 break;
         }
-        let profesionalFHIR = {
+        const profesionalFHIR = {
             resourceType: 'Practitioner',
             identifier: identificadores,
             active: data.habilitado ? data.habilitado : null,
