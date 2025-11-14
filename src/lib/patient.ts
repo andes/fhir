@@ -1,308 +1,429 @@
-
 import { getDominio, makeUrl } from './config';
+import {
+    Patient,
+    ContactPoint,
+    Address,
+    HumanName,
+    Identifier,
+    Reference,
+} from 'fhir/r4';
+import {
+    AndesPatient,
+    AndesContacto,
+    AndesDireccion,
+    AndesRelacion
+} from '../types/andes/patient.types';
 
 /**
- * Encode a patient from ANDES to FHIR
- * @param {} patient
+ * Helpers
  */
-export function encode(patient) {
-    if (patient) {
-        const identificadores: any = [];
-        identificadores.push({
-            system: getDominio(),
-            value: patient._id
-        });
-        if (patient.documento) {
-            identificadores.push({
-                system: 'http://www.renaper.gob.ar/dni',
-                value: patient.documento
-            });
-        }
-        if (patient.cuil) {
-            identificadores.push({
-                system: 'http://www.renaper.gob.ar/cuil',
-                value: patient.cuil
-            });
-        }
-        if (patient.numeroIdentificacion) {
-            if (patient.tipoIdentificacion === 'dni extranjero') {
-                identificadores.push({
-                    system: 'andes.gob.ar/sid/foreign-id',
-                    value: patient.numeroIdentificacion
-                });
-            }
-            if (patient.tipoIdentificacion === 'pasaporte') {
-                identificadores.push({
-                    system: 'andes.gob.ar/sid/passport',
-                    value: patient.numeroIdentificacion
-                });
-            }
-        }
-        // Parsea contactos
-        let contactos = patient.contacto ? patient.contacto.filter(c => c.valor).map(unContacto => {
-            let cont = {
-                resourceType: 'ContactPoint',
-                value: unContacto.valor,
-                rank: unContacto.ranking,
-            };
-            switch (unContacto.tipo) {
-                case 'fijo':
-                    cont['system'] = 'phone';
-                    break;
-                case 'celular':
-                    cont['system'] = 'phone';
-                    break;
-                case 'email':
-                    cont['system'] = 'email';
-                    break;
-            }
-            return cont;
-        }) : [];
-        // Parsea direcciones
-        let direcciones = patient.direccion ? patient.direccion.filter(dir => dir.ubicacion.localidad).map(unaDireccion => {
-            let direc = {
-                resourceType: 'Address',
-                postalCode: unaDireccion.codigoPostal ? unaDireccion.codigoPostal : '',
-                line: [unaDireccion.valor],
-                city: unaDireccion.ubicacion.localidad ? unaDireccion.ubicacion.localidad.nombre : '',
-                state: unaDireccion.ubicacion.provincia ? unaDireccion.ubicacion.provincia.nombre : '',
-                country: unaDireccion.ubicacion.pais ? unaDireccion.ubicacion.pais.nombre : '',
-            };
-            return direc;
-        }) : [];
-        // Parsea relaciones
-        let relaciones = patient.relaciones ? patient.relaciones.filter(r => !!r.relacion).map(unaRelacion => {
-            let relacion = {
-                relationship: [{
-                    text: unaRelacion.relacion.nombre
-                }], // The kind of relationship
-                name: {
-                    resourceType: 'HumanName',
-                    family: unaRelacion.apellido.split(' '), // Family name (often called 'Surname')
-                    given: unaRelacion.nombre.split(' '), // Given names (not always 'first'). Includes middle names
-                }
-            };
-            return relacion;
-        }) : [];
-        let genero;
-        switch (patient.genero) {
-            case 'femenino':
-                genero = 'female';
-                break;
-            case 'masculino':
-                genero = 'male';
-                break;
-            case 'otro':
-                genero = 'other';
-                break;
-        }
-        let pacienteFHIR: any = {
-            resourceType: 'Patient',
-            id: patient._id,
-            identifier: identificadores,
-            active: patient.activo ? patient.activo : null, // Whether this patient's record is in active use
-            name: [{
-                use: 'official',
-                resourceType: 'HumanName',
-                family: patient.apellido.split(' '),
-                given: patient.nombre.split(' '),
-                text: `${patient.nombre} ${patient.apellido}`
-            }],
-            gender: genero, // male | female | other | unknown
-            birthDate: patient.fechaNacimiento ? typeof patient.fechaNacimiento === 'string' ? new Date(patient.fechaNacimiento).toISOString().slice(0, 10) : patient.fechaNacimiento.toISOString().slice(0, 10) : null,
-            extension: [{
-                url: 'andes.gob.ar/fhir/StructureDefinition/patient-status',
-                valueCode: patient.estado ? patient.estado : 'temporal' // validado | temporal
-            }]
-        };
-        if (patient.fechaFallecimiento) {
-            pacienteFHIR.deceasedDateTime = typeof patient.fechaFallecimiento === 'string' ? new Date(patient.fechaFallecimiento.toISOString().slice(0, 10)) : patient.fechaFallecimiento.toISOString().slice(0, 10);
-        }
-        if (patient.estadoCivil) {
-            let estadoCivil;
-            switch (patient.estadoCivil) {
-                case 'casado':
-                    estadoCivil = 'Married';
-                    break;
-                case 'divorciado':
-                    estadoCivil = 'Divorced';
-                    break;
-                case 'viudo':
-                    estadoCivil = 'Widowed';
-                    break;
-                case 'soltero':
-                    estadoCivil = 'unmarried';
-                    break;
-                default:
-                    estadoCivil = 'unknown';
-                    break;
-            }
-            pacienteFHIR['maritalStatus'] = {
-                text: estadoCivil
-            };
-        }
-        if (patient.foto) {
-            pacienteFHIR['photo'] = [{
-                patient: patient.foto
-            }];
-        }
-        if (contactos.length > 0) { // A contact detail for the individual
-            pacienteFHIR['telecom'] = contactos;
-        }
-        if (direcciones.length > 0) { // Addresses for the individual
-            pacienteFHIR['address'] = direcciones;
-        }
-        if (relaciones.length > 0) { // A contact party (e.g. guardian, partner, friend) for the patient
-            pacienteFHIR['contact'] = relaciones;
-        }
-        let managingOrganization = {
-            reference: patient.createdBy.organizacion.id,
-            display: patient.createdBy.organizacion.nombre
-        };
-        pacienteFHIR['managingOrganization'] = managingOrganization;
-        return pacienteFHIR;
-    } else {
-        return null;
+
+function formatDateOnly(value?: string | Date): string | undefined {
+    if (!value) return undefined;
+    const d = typeof value === 'string' ? new Date(value) : value;
+    if (isNaN(d.getTime())) return undefined;
+    return d.toISOString().slice(0, 10);
+}
+
+function formatDateTime(value?: string | Date): string | undefined {
+    if (!value) return undefined;
+    const d = typeof value === 'string' ? new Date(value) : value;
+    if (isNaN(d.getTime())) return undefined;
+    return d.toISOString();
+}
+
+function mapGeneroFHIRToAndes(gender?: Patient['gender']): string | undefined {
+    switch (gender) {
+        case 'female':
+            return 'femenino';
+        case 'male':
+            return 'masculino';
+        case 'other':
+            return 'otro';
+        default:
+            return undefined;
+    }
+}
+function mapSexoAndesToGenderFHIR(sexo?: string): Patient['gender'] | undefined {
+    switch (sexo) {
+        case 'femenino':
+            return 'female';
+        case 'masculino':
+            return 'male';
+        case 'otro':
+            return 'other';
+        default:
+            return undefined; // unknown
+    }
+}
+
+
+function buildGenderIdentityExtension(genero?: string) {
+    if (!genero) {
+        return [];
+    }
+
+    return [{
+        url: 'http://hl7.org/fhir/StructureDefinition/individual-genderIdentity',
+        valueCode: genero
+    }];
+}
+
+function buildStatusExtension(estado?: string | null) {
+    const value = estado ?? 'temporal';
+    return [{
+        url: 'andes.gob.ar/fhir/StructureDefinition/patient-status',
+        valueCode: value
+    }];
+}
+
+
+function mapEstadoCivilAndesToFHIR(estadoCivil?: string): string {
+    switch (estadoCivil) {
+        case 'casado':
+            return 'Married';
+        case 'divorciado':
+            return 'Divorced';
+        case 'viudo':
+            return 'Widowed';
+        case 'soltero':
+            return 'unmarried';
+        default:
+            return 'unknown';
+    }
+}
+
+function mapEstadoCivilFHIRToAndes(estadoCivil?: string): string {
+    switch (estadoCivil) {
+        case 'Married':
+            return 'casado';
+        case 'Divorced':
+            return 'divorciado';
+        case 'Widowed':
+            return 'viudo';
+        case 'unmarried':
+            return 'soltero';
+        default:
+            return 'otro';
     }
 }
 
 /**
- * Decode a patient from FHIR to ANDES
- * @param {} patient
+ * Encode a patient from ANDES to FHIR
  */
-export function decode(patient) {
-    let genero: string;
-    let sexo: string;
-    // Cuando el paciente viene por FHIR suponemos el valor del genero tanto para nuestro field genero como sexo
-    switch (patient.gender) {
-        case 'female':
-            genero = 'femenino';
-            sexo = 'femenino';
-            break;
-        case 'male':
-            genero = 'masculino';
-            sexo = 'masculino';
-            break;
-        case 'other':
-            genero = 'otro';
-            sexo = 'otro';
-            break;
+export function encode(patient: AndesPatient | null | undefined): Patient | null {
+    if (!patient) {
+        return null;
     }
-    function getValue(items, key) {
-        const element = items.find(el => el.system === key);
-        if (element) {
-            return element.value;
+
+    // Identificadores
+    const identificadores: Identifier[] = [];
+
+    // Dominio local (id de ANDES o equivalente)
+    identificadores.push({
+        system: getDominio(),
+        value: patient._id ?? patient.id
+    });
+
+    if (patient.documento) {
+        identificadores.push({
+            system: 'http://www.renaper.gob.ar/dni',
+            value: patient.documento
+        });
+    }
+
+    if (patient.cuil) {
+        identificadores.push({
+            system: 'http://www.renaper.gob.ar/cuil',
+            value: patient.cuil
+        });
+    }
+
+    if (patient.numeroIdentificacion) {
+        if (patient.tipoIdentificacion === 'dni extranjero') {
+            identificadores.push({
+                system: 'andes.gob.ar/sid/foreign-id',
+                value: patient.numeroIdentificacion
+            });
+        }
+        if (patient.tipoIdentificacion === 'pasaporte') {
+            identificadores.push({
+                system: 'andes.gob.ar/sid/passport',
+                value: patient.numeroIdentificacion
+            });
         }
     }
+
+    // Contactos → telecom
+    const contactos: ContactPoint[] = (patient.contacto ?? [])
+        .filter((c: AndesContacto) => !!c.valor)
+        .map((unContacto: AndesContacto): ContactPoint => {
+            const cont: ContactPoint = {
+                value: unContacto.valor,
+                rank: unContacto.ranking
+            };
+
+            switch (unContacto.tipo) {
+                case 'fijo':
+                case 'celular':
+                    cont.system = 'phone';
+                    break;
+                case 'email':
+                    cont.system = 'email';
+                    break;
+            }
+            return cont;
+        });
+
+    // Direcciones → address
+    const direcciones: Address[] = (patient.direccion ?? [])
+        .filter((dir: AndesDireccion) => !!dir.ubicacion?.localidad)
+        .map((unaDireccion: AndesDireccion): Address => {
+            const city =
+                typeof unaDireccion.ubicacion.localidad === 'object'
+                    ? unaDireccion.ubicacion.localidad?.nombre
+                    : unaDireccion.ubicacion.localidad;
+
+            const state =
+                typeof unaDireccion.ubicacion.provincia === 'object'
+                    ? unaDireccion.ubicacion.provincia?.nombre
+                    : unaDireccion.ubicacion.provincia;
+
+            const country =
+                typeof unaDireccion.ubicacion.pais === 'object'
+                    ? unaDireccion.ubicacion.pais?.nombre
+                    : unaDireccion.ubicacion.pais;
+
+            return {
+                postalCode: unaDireccion.codigoPostal ?? '',
+                line: [unaDireccion.valor],
+                city: city ?? '',
+                state: state ?? '',
+                country: country ?? ''
+            };
+        });
+
+    // Relaciones → contact
+    const relacionesFHIR = (patient.relaciones ?? [])
+        .filter((r: AndesRelacion) => !!r.relacion)
+        .map((unaRelacion: AndesRelacion) => {
+            return {
+                relationship: [{
+                    text: unaRelacion.relacion.nombre
+                }],
+                name: {
+                    family: unaRelacion.apellido,
+                    given: unaRelacion.nombre.split(' ')
+                } as HumanName
+            };
+        });
+
+    // Género
+    // const generoFHIR = mapGeneroAndesToFHIR(patient.genero ?? patient.sexo);
+    const generoFHIR = mapSexoAndesToGenderFHIR(patient.sexo ?? patient.genero as string);
+
+    const genderIdentityExtensions = buildGenderIdentityExtension(patient.genero)
+    const statusExtensions = buildStatusExtension(patient.estado);
+
+    const birthDate = formatDateOnly(patient.fechaNacimiento);
+
+    const extensions = [...statusExtensions, ...genderIdentityExtensions];
+
+    const pacienteFHIR: Patient = {
+        resourceType: 'Patient',
+        id: patient._id ?? patient.id,
+        identifier: identificadores,
+        active: patient.activo ?? undefined,
+        name: [{
+            use: 'official',
+            family: patient.apellido,
+            given: patient.nombre.split(' '),
+            text: `${patient.nombre} ${patient.apellido}`
+        }],
+        gender: generoFHIR,
+        birthDate,
+        ...(extensions.length > 0 && { extension: extensions })
+    };
+
+    if (patient.fechaFallecimiento) {
+        const deceased = formatDateTime(patient.fechaFallecimiento);
+        if (deceased) {
+            pacienteFHIR.deceasedDateTime = deceased;
+        }
+    }
+
+    if (patient.estadoCivil) {
+        pacienteFHIR.maritalStatus = {
+            text: mapEstadoCivilAndesToFHIR(patient.estadoCivil)
+        } as any;
+    }
+
+    if (patient.foto) {
+        pacienteFHIR.photo = [{ data: patient.foto }];
+    }
+
+    if (contactos.length > 0) {
+        pacienteFHIR.telecom = contactos;
+    }
+
+    if (direcciones.length > 0) {
+        pacienteFHIR.address = direcciones;
+    }
+
+    if (relacionesFHIR.length > 0) {
+        pacienteFHIR.contact = relacionesFHIR;
+    }
+
+    if (patient.createdBy?.organizacion) {
+        const managingOrganization: Reference = {
+            reference: patient.createdBy.organizacion.id,
+            display: patient.createdBy.organizacion.nombre
+        };
+        pacienteFHIR.managingOrganization = managingOrganization;
+    }
+
+    return pacienteFHIR;
+}
+
+/**
+ * Decode a patient from FHIR to ANDES
+ */
+export function decode(patient: Patient): AndesPatient {
+    let genero: string | undefined;
+    let sexo: string | undefined;
+
+    // Cuando el paciente viene por FHIR suponemos el valor del género
+    genero = mapGeneroFHIRToAndes(patient.gender);
+    sexo = genero;
+
+    function getValue(
+        items: { system?: string; value?: string }[] | undefined,
+        key: string
+    ): string | undefined {
+        if (!items) return undefined;
+        const element = items.find(el => el.system === key);
+        return element?.value;
+    }
+
     const tiposIdentificacion = ['andes.gob.ar/sid/foreign-id', 'andes.gob.ar/sid/passport'];
     const tipoAndes = ['dni extranjero', 'pasaporte'];
-    let tipoIdentificacion;
-    let numeroIdentificacion;
+    let tipoIdentificacion: string | undefined;
+    let numeroIdentificacion: string | undefined;
+
     for (let i = 0; i < tiposIdentificacion.length; i++) {
-        if (getValue(patient.identifier, tiposIdentificacion[i])) {
+        const val = getValue(patient.identifier, tiposIdentificacion[i]);
+        if (val) {
             tipoIdentificacion = tipoAndes[i];
-            numeroIdentificacion = getValue(patient.identifier, tiposIdentificacion[i]);
+            numeroIdentificacion = val;
         }
     }
-    let pacienteAndes = {
-        id: getValue(patient.identifier, makeUrl('Patient')),
+
+    const firstName = patient.name?.[0];
+
+    const nombre = firstName
+        ? (firstName.given ?? []).join(' ').trim()
+        : '';
+
+    const apellido = firstName
+        ? (Array.isArray(firstName.family)
+            ? firstName.family.join(' ').trim()
+            : (firstName.family ?? ''))
+        : '';
+
+    const pacienteAndes: AndesPatient = {
+        id: getValue(patient.identifier, makeUrl('Patient')) ?? patient.id,
         documento: getValue(patient.identifier, 'http://www.renaper.gob.ar/dni'),
         tipoIdentificacion,
         numeroIdentificacion,
-        nombre: patient.name[0].given.join().replace(',', ' '),
-        apellido: Array.isArray(patient.name[0].family) ? patient.name[0].family.join().replace(',', ' ') : patient.name[0].family,
+        nombre,
+        apellido,
         fechaNacimiento: patient.birthDate,
         genero,
         sexo,
-        estado: 'temporal', // Todos los pacientes que recibimos por Fhir son considerados temporales en su conversión.
-        createdBy: null
+        estado: 'temporal'
     };
-    let contactos = patient.telecom ? patient.telecom.map(unContacto => {
-        let cont = {
-            valor: unContacto.value,
-            ranking: unContacto.rank
-        };
-        switch (unContacto.system) {
-            case 'phone':
-                cont['tipo'] = 'celular';
-                break;
-            case 'email':
-                cont['tipo'] = 'email';
-                break;
-        }
-        return cont;
-    }) : [];
 
-    let relaciones = patient.contact ? patient.contact.map(aContact => {
-        let relacion = {
-            relacion: {
-                nombre: aContact.relationship[0].text
-            },
-            nombre: aContact.name.given.join().replace(',', ' '),
-            apellido: aContact.name.family
-        };
-        return relacion;
-    }) : [];
-
-    if (patient.maritalStatus) {
-        let estadoCivil;
-        switch (patient.maritalStatus['text']) {
-            case 'Married':
-                estadoCivil = 'casado';
-                break;
-            case 'Divorced':
-                estadoCivil = 'divorciado';
-                break;
-            case 'Widowed':
-                estadoCivil = 'viudo';
-                break;
-            case 'unmarried':
-                estadoCivil = 'soltero';
-                break;
-            default:
-                estadoCivil = 'otro';
-                break;
-        }
-        pacienteAndes['estadoCivil'] = estadoCivil;
-    }
-
-    let direcciones = patient.address ? patient.address.map(unaDireccion => {
-        let dir = {
-            activo: true,
-            valor: unaDireccion.line,
-            codigoPostal: unaDireccion.postalCode,
-            // TODO: En un MATETIME ver si la información de pais, provincia, localidad
-            // se delega en el insert o update. Y este decoder sólo guarda la info tal cual viene.
-            ubicacion: {
-                pais: unaDireccion.country,
-                provincia: unaDireccion.state,
-                localidad: unaDireccion.city
+    const contactos = patient.telecom
+        ? patient.telecom.map((unContacto: ContactPoint) => {
+            const cont: any = {
+                valor: unContacto.value,
+                ranking: unContacto.rank
+            };
+            switch (unContacto.system) {
+                case 'phone':
+                    cont.tipo = 'celular';
+                    break;
+                case 'email':
+                    cont.tipo = 'email';
+                    break;
             }
-        };
-        return dir;
-    }) : [];
+            return cont;
+        })
+        : [];
 
-    pacienteAndes['direccion'] = direcciones;
+    const relaciones = patient.contact
+        ? patient.contact.map((aContact): AndesRelacion => {
+            const relText = aContact.relationship?.[0]?.text ?? '';
+            const givenName = (aContact.name?.given ?? []).join(' ').replace(',', ' ');
+            const familyName = Array.isArray(aContact.name?.family)
+                ? (aContact.name?.family as string[]).join(' ').replace(',', ' ')
+                : (aContact.name?.family as string | undefined) ?? '';
 
-    if (patient.active) {
-        pacienteAndes['activo'] = patient.active;
+            return {
+                relacion: { nombre: relText },
+                nombre: givenName,
+                apellido: familyName
+            };
+        })
+        : [];
+
+    if (patient.maritalStatus?.text) {
+        pacienteAndes.estadoCivil = mapEstadoCivilFHIRToAndes(patient.maritalStatus.text);
     }
+
+    const direcciones = patient.address
+        ? patient.address.map((unaDireccion): any => {
+            const valor = Array.isArray(unaDireccion.line)
+                ? (unaDireccion.line[0] ?? '')
+                : (unaDireccion.line as string | undefined) ?? '';
+
+            const dir = {
+                activo: true,
+                valor,
+                codigoPostal: unaDireccion.postalCode,
+                ubicacion: {
+                    pais: unaDireccion.country,
+                    provincia: unaDireccion.state,
+                    localidad: unaDireccion.city
+                }
+            };
+            return dir;
+        })
+        : [];
+
+    pacienteAndes.direccion = direcciones;
+
+    if (patient.active !== undefined) {
+        pacienteAndes.activo = patient.active;
+    }
+
     if (contactos.length > 0) {
-        pacienteAndes['contacto'] = contactos;
-    }
-    if (patient.photo) { // Image of the patient
-        pacienteAndes['foto'] = patient.photo[0].data;
+        pacienteAndes.contacto = contactos;
     }
 
-    if (patient.contact) {
-        pacienteAndes['relaciones'] = relaciones;
+    if (patient.photo && patient.photo.length > 0) {
+        pacienteAndes.foto = patient.photo[0].data as any;
+    }
+
+    if (relaciones.length > 0) {
+        pacienteAndes.relaciones = relaciones;
     }
 
     if (patient.managingOrganization) {
-        pacienteAndes['createdBy'] = {
+        pacienteAndes.createdBy = {
             organizacion: {
-                id: patient.managingOrganization.reference,
-                nombre: patient.managingOrganization.display
+                id: patient.managingOrganization.reference ?? '',
+                nombre: patient.managingOrganization.display ?? ''
             }
         };
     }
@@ -312,49 +433,61 @@ export function decode(patient) {
 
 /**
  * Verify if a patient has a FHIR format
- * @param {*} patient
  */
-export function verify(patient) {
+export function verify(patient: any): boolean {
     let respuesta = true;
-    let fieldVerified = Object.keys(patient).every(pacienteFHIRFields);
-    // Verificamos que las key esten contenidas en los conjuntos mínimos pacienteFHIRField
+    const fieldVerified = Object.keys(patient).every(pacienteFHIRFields);
+
     if (fieldVerified) {
         respuesta = ('resourceType' in patient) && patient.resourceType === 'Patient';
         respuesta = respuesta && ('identifier' in patient);
-        if (patient.identifier.length > 0) {
-            patient.identifier.forEach(anIdentifier => respuesta = respuesta && Object.keys(anIdentifier).every(identifierFields));
+        if (patient.identifier?.length > 0) {
+            patient.identifier.forEach((anIdentifier: any) => {
+                respuesta = respuesta && Object.keys(anIdentifier).every(identifierFields);
+            });
         }
-        patient.name.forEach(aName => respuesta = respuesta && validName(aName));
-        if (patient.active) {
+        patient.name?.forEach((aName: any) => {
+            respuesta = respuesta && validName(aName);
+        });
+        if (patient.active !== undefined) {
             respuesta = respuesta && (typeof patient.active === 'boolean');
         }
         if (patient.telecom) {
-            patient.telecom.forEach(aTelecom => respuesta = respuesta && Object.keys(aTelecom).every(telecomFields));
+            patient.telecom.forEach((aTelecom: any) => {
+                respuesta = respuesta && Object.keys(aTelecom).every(telecomFields);
+            });
         }
         if (patient.gender) {
-            respuesta = respuesta && patient.gender.match('male|female|other|unknown') != null;
+            respuesta = respuesta && (patient.gender as string).match('male|female|other|unknown') != null;
         }
         if (patient.birthDate) {
-            respuesta = respuesta && typeof patient.birthDate === 'string'; // TODO: Algun control de que tenga formato Date
+            respuesta = respuesta && typeof patient.birthDate === 'string';
         }
         if (patient.deceasedDateTime) {
-            respuesta = respuesta && typeof patient.deceasedDateTime === 'string'; // TODO: Algun control de que tenga formato DateTime
+            respuesta = respuesta && typeof patient.deceasedDateTime === 'string';
         }
         if (patient.address) {
-            patient.address.forEach(anAddress => respuesta = respuesta && Object.keys(anAddress).every(addressFields));
+            patient.address.forEach((anAddress: any) => {
+                respuesta = respuesta && Object.keys(anAddress).every(addressFields);
+            });
         }
         if (patient.maritalStatus && patient.maritalStatus.text) {
-            respuesta = respuesta && Object.keys(patient.maritalStatus).every(codingFields)
-                && typeof patient.maritalStatus.text === 'string'
-                && patient.maritalStatus.text.match('Married|Divorced|Widowed|unmarried|unknown') != null;
+            respuesta = respuesta &&
+                Object.keys(patient.maritalStatus).every(codingFields) &&
+                typeof patient.maritalStatus.text === 'string' &&
+                patient.maritalStatus.text.match('Married|Divorced|Widowed|unmarried|unknown') != null;
         }
         if (patient.photo) {
-            patient.photo.forEach(aPhoto => respuesta = respuesta && Object.keys(aPhoto).every(photoFields));
+            patient.photo.forEach((aPhoto: any) => {
+                respuesta = respuesta && Object.keys(aPhoto).every(photoFields);
+            });
         }
         if (patient.contact) {
-            patient.contact.forEach(aContact => {
+            patient.contact.forEach((aContact: any) => {
                 if (aContact.relationship) {
-                    aContact.relationship.forEach(aRelation => respuesta = respuesta && Object.keys(aRelation).every(codingFields));
+                    aContact.relationship.forEach((aRelation: any) => {
+                        respuesta = respuesta && Object.keys(aRelation).every(codingFields);
+                    });
                 }
                 if (aContact.name) {
                     respuesta = respuesta && validName(aContact.name);
@@ -362,50 +495,51 @@ export function verify(patient) {
             });
         }
     } else {
-        respuesta = fieldVerified; // No cumple con los campos estandar de FHIR
+        respuesta = fieldVerified;
     }
+
     return respuesta;
 }
 
-function pacienteFHIRFields(elem) {
+/**
+ * Verify helpers
+ */
+
+function pacienteFHIRFields(elem: string): boolean {
     return elem.match('resourceType|identifier|active|name|telecom|gender|birthDate|deceasedBoolean|deceasedDateTime|address|maritalStatus|photo|contact') != null;
 }
 
-function identifierFields(elem) {
+function identifierFields(elem: string): boolean {
     return elem.match('use|type|system|value|period|assigner') != null;
 }
 
-function nameFields(elem) {
+function nameFields(elem: string): boolean {
     return elem.match('resourceType|family|given') != null;
 }
 
-function telecomFields(elem) {
+function telecomFields(elem: string): boolean {
     return elem.match('resourceType|system|value|use|rank|period') != null;
 }
 
-function addressFields(elem) {
+function addressFields(elem: string): boolean {
     return elem.match('resourceType|use|type|text|line|city|district|state|postalCode|country|period') != null;
 }
 
-function codingFields(elem) {
+function codingFields(elem: string): boolean {
     return elem.match('coding|text') != null;
 }
 
-function photoFields(elem) {
+function photoFields(elem: string): boolean {
     return elem.match('contentType|language|data|url|size|hash|title|creation') != null;
 }
 
-function contactFields(elem) {
-    return elem.match('relationship|name|telecom|address|gender|organization|period') != null;
-}
-
-function validName(aName) {
-    return Object.keys(aName).every(nameFields) && ('resourceType' in aName) && aName.resourceType === 'HumanName' &&
+function validName(aName: any): boolean {
+    return Object.keys(aName).every(nameFields) &&
+        ('resourceType' in aName) && aName.resourceType === 'HumanName' &&
         ('family' in aName) && Array.isArray(aName.family) && aName.family.every(areStrings) &&
         ('given' in aName) && Array.isArray(aName.given) && aName.given.every(areStrings);
 }
 
-function areStrings(elem) {
+function areStrings(elem: unknown): boolean {
     return typeof elem === 'string';
 }
-

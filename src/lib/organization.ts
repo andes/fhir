@@ -1,89 +1,111 @@
-import { getDominio, makeUrl } from './config';
+import { makeUrl } from './config';
+import {
+    Organization,
+    ContactPoint,
+    Address,
+} from 'fhir/r4';
+
+import {
+    AndesOrganization,
+    AndesContactoOrg,
+    AndesDireccionOrg
+} from '../types/andes/organization.types';
 
 /**
- * Encode a organization from ANDES to FHIR
- * @param {} organization
+ * Encode an ANDES Organization to FHIR Organization
  */
-export function encode(organization) {
-    let data = organization;
-    if (data) {
-        let identificadores: any[] = data.codigo.sisa ? [{
-            assigner: 'sisa',
-            value: data.codigo.sisa
-        }] : [];
-        if (data.codigo.cuie) {
-            identificadores.push({
-                assigner: 'cuie',
-                value: data.codigo.cuie
-            });
-        }
-        if (data.codigo.remediar) {
-            identificadores.push({
-                assigner: 'remediar',
-                value: data.codigo.remediar
-            });
-        }
-        if (data.codigo.sips) {
-            identificadores.push({
-                assigner: 'sips',
-                value: data.codigo.sips
-            });
-        }
-        identificadores.push({
-            system: makeUrl('Organization'),
-            value: data._id
-        });
+export function encode(organization: AndesOrganization | null | undefined): Organization | null {
+    const data = organization;
+    if (!data) return null;
 
-        let contactos = data.contacto ? data.contacto.map(unContacto => {
-            let cont = {
-                resourceType: 'ContactPoint',
-                value: unContacto.valor,
-                rank: unContacto.ranking,
+    // Identificadores
+    const identificadores: any[] = [];
+
+    if (data.codigo?.sisa) {
+        identificadores.push({
+            system: 'andes.gob.ar/sisa',
+            value: data.codigo.sisa
+        });
+    }
+    if (data.codigo?.cuie) {
+        identificadores.push({
+            system: 'andes.gob.ar/cuie',
+            value: data.codigo.cuie
+        });
+    }
+    if (data.codigo?.remediar) {
+        identificadores.push({
+            system: 'andes.gob.ar/remediar',
+            value: data.codigo.remediar
+        });
+    }
+    if (data.codigo?.sips) {
+        identificadores.push({
+            system: 'andes.gob.ar/sips',
+            value: data.codigo.sips
+        });
+    }
+
+    identificadores.push({
+        system: makeUrl('Organization'),
+        value: data._id ?? data.id
+    });
+
+    // Contactos → telecom
+    const contactos: ContactPoint[] = (data.contacto ?? [])
+        .map((item: AndesContactoOrg): ContactPoint => {
+            const cp: ContactPoint = {
+                value: item.valor,
+                rank: item.ranking
             };
-            switch (unContacto.tipo) {
+            switch (item.tipo) {
                 case 'fijo':
-                    cont['system'] = 'phone';
-                    break;
                 case 'celular':
-                    cont['system'] = 'phone';
+                    cp.system = 'phone';
                     break;
                 case 'email':
-                    cont['system'] = 'email';
+                    cp.system = 'email';
                     break;
             }
-            return cont;
-        }) : [];
-        // Parsea direcciones
-        let direcciones = data.direccion ? [{
-            resourceType: 'Address',
-            postalCode: data.direccion.codigoPostal ? data.direccion.codigoPostal : '',
-            line: [data.direccion.valor],
-            city: data.direccion.ubicacion.localidad ? data.direccion.ubicacion.localidad.nombre : '',
-            state: data.direccion.ubicacion.provincia ? data.direccion.ubicacion.provincia.nombre : '',
-            country: data.direccion.ubicacion.pais ? data.direccion.ubicacion.pais.nombre : '',
-        }] : [];
+            return cp;
+        });
 
-        // Armamos la organizacion FHIR
-        let organizacionFHIR = {
-            id: data.id,
-            resourceType: 'Organization',
-            identifier: identificadores,
-            active: data.activo ? data.activo : null,
-            type: [{
-                resourceType: 'CodeableConcept',
-                text: data.tipoEstablecimiento ? data.tipoEstablecimiento.nombre : null,
-            }],
-            name: data.nombre ? data.nombre : null, // Name used for the organization
-        };
-        if (contactos.length > 0) { // A contact detail for the organization
-            organizacionFHIR['telecom'] = contactos;
-        }
+    // Dirección → address
+    const direcciones: Address[] = [];
 
-        if (direcciones) { // 	An address for the organization
-            organizacionFHIR['address'] = direcciones;
-        }
-        return organizacionFHIR;
-    } else {
-        return null;
+    if (data.direccion) {
+        const dir: AndesDireccionOrg = data.direccion;
+
+        direcciones.push({
+            postalCode: dir.codigoPostal ?? '',
+            line: [dir.valor],
+            city: dir.ubicacion?.localidad?.nombre ?? '',
+            state: dir.ubicacion?.provincia?.nombre ?? '',
+            country: dir.ubicacion?.pais?.nombre ?? ''
+        });
     }
+
+    // Organización FHIR
+    const organizacionFHIR: Organization = {
+        resourceType: 'Organization',
+        id: data._id ?? data.id,
+        identifier: identificadores,
+        active: data.activo ?? undefined,
+        name: data.nombre ?? undefined,
+        type: data.tipoEstablecimiento
+            ? [{
+                text: data.tipoEstablecimiento.nombre
+            }]
+            : undefined
+    };
+
+    if (contactos.length > 0) {
+        organizacionFHIR.telecom = contactos;
+    }
+
+    if (direcciones.length > 0) {
+        organizacionFHIR.address = direcciones;
+    }
+
+    return organizacionFHIR;
 }

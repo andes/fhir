@@ -5,7 +5,7 @@
  * [ASK] El code de extension puede ir en vaccineCode?
  * [ASk] Location no se sabe. Solo esta el texto
  */
-export function encode(patientReference, nomivac) {
+export function encode(patientReference: any, nomivac: any) {
     return {
         resourceType: 'Immunization',
         id: nomivac.idvacuna,

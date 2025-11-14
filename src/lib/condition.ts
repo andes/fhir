@@ -1,4 +1,3 @@
-import { makeUrl } from './config';
 
 /**
  *
@@ -6,64 +5,64 @@ import { makeUrl } from './config';
  */
 
 
-export function encode(patientReference, registro) {
+export function encode(patientReference: any, registro: any) {
     return {
-        id : registro._id,
-        category : [
+        id: registro._id,
+        category: [
             {
-                coding : [
+                coding: [
                     {
-                        system : 'http://loinc.org',
-                        display : 'Problem',
-                        code : '75326-9'
+                        system: 'http://loinc.org',
+                        display: 'Problem',
+                        code: '75326-9'
                     }
                 ]
             }
         ],
-        subject : {
-            reference : patientReference
+        subject: {
+            reference: patientReference
         },
-        onsetDateTime : registro.createdAt.getFullYear(), // [TODO] No va solo el año
-        resourceType : 'Condition',
+        onsetDateTime: registro.createdAt.getFullYear(), // [TODO] No va solo el año
+        resourceType: 'Condition',
         // Por el momento ponemos 'confirmed'
-        verificationStatus : {
-            coding : [
+        verificationStatus: {
+            coding: [
                 {
-                    system : 'http://terminology.hl7.org//CodeSystem//condition-ver-status',
-                    code : 'confirmed'
+                    system: 'http://terminology.hl7.org//CodeSystem//condition-ver-status',
+                    code: 'confirmed'
                 }
             ]
         },
-        code : {
-            coding : [
+        code: {
+            coding: [
                 {
-                    code : registro.concepto.conceptId,
-                    system : 'http://snomed.info/sct',
-                    display : registro.concepto.fsn
+                    code: registro.concepto.conceptId,
+                    system: 'http://snomed.info/sct',
+                    display: registro.concepto.fsn
                 }
             ]
         },
-        recordedDate : registro.createdAt,
-        meta : {
-            profile : [
+        recordedDate: registro.createdAt,
+        meta: {
+            profile: [
                 'http://hl7.org/fhir/uv/ips/StructureDefinition/condition-uv-ips'
             ]
         },
-        text : {
-            status : 'generated',
+        text: {
+            status: 'generated',
             div: `<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: Problema: </p><p>${registro.nombre}</p></div>`
         },
-        severity : {  // [TODO] Sacar esto porque no lo tenemos todavía. No hay un campo de severidad.
-            coding : [
+        severity: {  // [TODO] Sacar esto porque no lo tenemos todavía. No hay un campo de severidad.
+            coding: [
                 {
-                    system : 'http://loinc.org',
-                    display : 'Moderate',
-                    code : 'LA6751-7'
+                    system: 'http://loinc.org',
+                    display: 'Moderate',
+                    code: 'LA6751-7'
                 }
             ]
         },
-        clinicalStatus : {
-            coding : [
+        clinicalStatus: {
+            coding: [
                 {
                     system: 'http://terminology.hl7.org/CodeSystem/condition-clinical',
                     code: registro.valor.estado // [TODO]  Tenemos este dato.

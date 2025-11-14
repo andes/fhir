@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { makeUrl } from './config';
 
-export function encode(ID, author, organization, patient, binaryURL) {
+export function encode(ID: any, author: any, organization: any, patient: any, binaryURL: any) {
     return {
         resourceType: 'DocumentReference',
         id: ID,

@@ -2,7 +2,7 @@
  * Encode de Alergias e Intolerancias from ANDES to FHIR
  * @param {} AllergyIntolerance
  */
-export function encode(patientReference, alergiaIntolerancia) {
+export function encode(patientReference: any, alergiaIntolerancia: any) {
     return {
         category: [
             'medication'
