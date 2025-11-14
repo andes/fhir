@@ -1,44 +1,48 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import globals from "globals";
-import tsParser from "@typescript-eslint/parser";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
+// eslint.config.mjs
+import eslint from '@eslint/js';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import globals from 'globals';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
+export default [
+    eslint.configs.recommended,
 
-export default defineConfig([globalIgnores(["**/dist", "**/node_modules"]), {
-    extends: compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended"),
+    {
+        files: ['src/**/*.ts', 'tests/**/*.ts'],
 
-    plugins: {
-        "@typescript-eslint": typescriptEslint,
-    },
-
-    languageOptions: {
-        globals: {
-            ...globals.node,
-            ...globals.jest,
+        languageOptions: {
+            parser: tsParser,
+            parserOptions: {
+                project: './tsconfig.json',
+                sourceType: 'module',
+                ecmaVersion: 'latest'
+            },
+            globals: {
+                ...globals.node,
+                ...globals.jest
+            }
         },
 
-        parser: tsParser,
-        ecmaVersion: 5,
-        sourceType: "module",
-
-        parserOptions: {
-            project: "./tsconfig.json",
+        plugins: {
+            '@typescript-eslint': tseslint
         },
+
+        rules: {
+            ...tseslint.configs.recommended.rules,
+
+            '@typescript-eslint/no-unused-vars': [
+                'warn',
+                { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }
+            ],
+
+            '@typescript-eslint/explicit-function-return-type': 'off',
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/ban-ts-comment': 'off',
+            'no-console': 'off'
+        }
     },
 
-    rules: {
-        "@typescript-eslint/no-unused-vars": ["warn"],
-        "@typescript-eslint/explicit-function-return-type": "off",
-    },
-}]);
+    {
+        ignores: ['dist', 'node_modules']
+    }
+];
