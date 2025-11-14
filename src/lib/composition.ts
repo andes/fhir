@@ -4,13 +4,13 @@
 import moment from 'moment';
 import { makeUrl } from './config';
 
-function getReference(url) {
+function getReference(url: any) {
     return {
         reference: url
     };
 }
 
-export function encode(ID, patientReference, custodianReference, deviceReference, medicationStatementReference, ImmunizationReferences, AllergyIntoleranceReferences, ConditionReferences) {
+export function encode(ID: any, patientReference: any, custodianReference: any, deviceReference: any, medicationStatementReference: any, ImmunizationReferences: any, AllergyIntoleranceReferences: any, ConditionReferences: any) {
     const now = moment();
     let Immunization: any = [];
     let conditions: any = [];

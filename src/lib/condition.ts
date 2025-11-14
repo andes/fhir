@@ -5,7 +5,7 @@
  */
 
 
-export function encode(patientReference, registro) {
+export function encode(patientReference: any, registro: any) {
     return {
         id: registro._id,
         category: [

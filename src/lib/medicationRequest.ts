@@ -7,7 +7,7 @@ import moment from 'moment';
 
 // Muy incompleto hay que mejorarlo mucho todavía
 
-export function encode(patientReference, practitionerReference, medicationFHIR, data) {
+export function encode(patientReference: any, practitionerReference: any, medicationFHIR: any, data: any) {
     return {
         resourceType: 'MedicationRequest',
         id: data.registro._id, // id de la prescripción completa

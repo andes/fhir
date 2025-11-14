@@ -2,7 +2,7 @@
  * Encode de Medicamentos from ANDES to FHIR
  * @param {} medication
  */
-export function encode(medication) {
+export function encode(medication: any) {
     // Falta completar con más detalle
     return {
         resourceType: 'Medication',

@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { makeUrl } from './config';
 
-export function encode(ID, resources) {
+export function encode(ID: any, resources: any) {
     return {
         resourceType: 'Bundle',
         id: ID,

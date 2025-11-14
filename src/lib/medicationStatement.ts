@@ -3,7 +3,7 @@
  * @param {} medicationStatement
  */
 // Muy incompleto hay que mejorarlo mucho todavía
-export function encode(patientReference, medicationReference, prestacionMedicamento) {
+export function encode(patientReference: any, medicationReference: any, prestacionMedicamento: any) {
     return {
         resourceType: 'MedicationStatement',
         status: (prestacionMedicamento.valor.estado === 'activo') ? 'active' : 'inactive',
