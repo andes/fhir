@@ -10,7 +10,8 @@
         "tsc": "tsc",
         "tsc:w": "tsc -w",
         "test": "jest --coverage",
-        "prepublishOnly": "rimraf dist && tsc -p ./ --outDir dist/"
+        "prepublishOnly": "rimraf dist && tsc -p ./ --outDir dist/",
+        "build": "tsc -p ./ --outDir dist"
     },
     "devDependencies": {
         "@types/jest": "29.5.14",
