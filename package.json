@@ -28,5 +28,20 @@
     "dependencies": {
         "@types/fhir": "^0.0.41",
         "moment": "2.29.4"
+    },
+    "files": [
+        "dist/**/*"
+    ],
+    "release": {
+        "branches": [
+            {
+                "name": "master"
+            },
+            {
+                "name": "develop",
+                "channel": "beta",
+                "prerelease": "beta"
+            }
+        ]
     }
 }
