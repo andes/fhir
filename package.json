@@ -12,13 +12,18 @@
         "test": "jest --coverage",
         "prepublishOnly": "rimraf dist && tsc -p ./ --outDir dist/",
         "build": "tsc -p ./ --outDir dist",
-        "semantic-release": "semantic-release"
+        "semantic-release": "semantic-release",
+        "release:beta": "dotenv -e .env -- semantic-release --branches develop",
+        "release:beta:dry": "dotenv -e .env -- semantic-release --no-ci --branches develop --dry-run",
+        "release:prod": "dotenv -e .env -- semantic-release --branches master",
+        "release:prod:dry": "dotenv -e .env -- semantic-release --no-ci --branches master --dry-run"
     },
     "devDependencies": {
         "@types/jest": "29.5.14",
         "@types/node": "^18.19.0",
         "@typescript-eslint/eslint-plugin": "^6.21.0",
         "@typescript-eslint/parser": "^6.21.0",
+        "dotenv-cli": "^11.0.0",
         "eslint": "^8.57.0",
         "jest": "29.7.0",
         "rimraf": "^5.0.7",
