@@ -1,6 +1,6 @@
 {
     "name": "@andes/fhir",
-    "version": "1.12.1-beta.2",
+    "version": "0.0.0-development",
     "engines": {
         "node": ">=18.0.0"
     },
