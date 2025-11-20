@@ -15,7 +15,7 @@
         "prepublishOnly": "rimraf dist && tsc -p ./ --outDir dist/",
         "build": "tsc -p ./ --outDir dist",
         "semantic-release": "semantic-release",
-        "release:beta": "dotenv -e .env -- semantic-release --branches develop",
+        "release:beta": "dotenv -e .env -- semantic-release",
         "release:beta:dry": "dotenv -e .env -- semantic-release --no-ci --dry-run",
         "release:prod": "dotenv -e .env -- semantic-release --branches master",
         "release:prod:dry": "dotenv -e .env -- semantic-release --no-ci --branches master --dry-run"
