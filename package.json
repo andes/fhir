@@ -5,6 +5,8 @@
         "node": ">=18.0.0"
     },
     "engineStrict": true,
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
         "lint": "eslint \"src/**/*.ts\"",
         "tsc": "tsc",
