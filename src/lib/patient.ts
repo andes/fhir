@@ -63,16 +63,26 @@ function buildGenderIdentityExtension(genero?: string) {
         return [];
     }
 
-    return [{
-        url: 'http://hl7.org/fhir/StructureDefinition/individual-genderIdentity',
-        valueCode: genero
-    }];
+    return [
+        {
+            "url": "https://andes.gob.ar/fhir/StructureDefinition/patient-genderIdentity",
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "https://andes.gob.ar/fhir/CodeSystem/gender-identity",
+                        "code": genero,
+                        "display": genero
+                    }
+                ]
+            }
+        }
+    ];
 }
 
 function buildStatusExtension(estado?: string | null) {
     const value = estado ?? 'temporal';
     return [{
-        url: 'andes.gob.ar/fhir/StructureDefinition/patient-status',
+        url: 'https://andes.gob.ar/fhir/StructureDefinition/patient-status',
         valueCode: value
     }];
 }
