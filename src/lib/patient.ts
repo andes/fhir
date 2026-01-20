@@ -286,7 +286,7 @@ export function encode(patient: AndesPatient | null | undefined): Patient | null
 
     if (patient.createdBy?.organizacion) {
         const managingOrganization: Reference = {
-            reference: patient.createdBy.organizacion.id,
+            reference: `Organization/${patient.createdBy.organizacion.id}`,
             display: patient.createdBy.organizacion.nombre
         };
         pacienteFHIR.managingOrganization = managingOrganization;
