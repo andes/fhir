@@ -118,6 +118,19 @@ function mapEstadoCivilFHIRToAndes(estadoCivil?: string): string {
     }
 }
 
+function mapAndesRankingToFhirRank(andesRanking?: number): number {
+    return typeof andesRanking === 'number' && Number.isInteger(andesRanking) && andesRanking >= 0
+        ? andesRanking + 1
+        : 1;
+}
+
+function mapFhirRankToAndesRanking(fhirRank?: number): number {
+    return typeof fhirRank === 'number' && Number.isInteger(fhirRank) && fhirRank > 0
+        ? fhirRank - 1
+        : 0;
+}
+
+
 /**
  * Encode a patient from ANDES to FHIR
  */
@@ -170,7 +183,7 @@ export function encode(patient: AndesPatient | null | undefined): Patient | null
         .map((unContacto: AndesContacto): ContactPoint => {
             const cont: ContactPoint = {
                 value: unContacto.valor,
-                rank: unContacto.ranking
+                rank: mapAndesRankingToFhirRank(unContacto.ranking)
             };
 
             switch (unContacto.tipo) {
@@ -357,7 +370,7 @@ export function decode(patient: Patient): AndesPatient {
         ? patient.telecom.map((unContacto: ContactPoint) => {
             const cont: any = {
                 valor: unContacto.value,
-                ranking: unContacto.rank
+                ranking: mapFhirRankToAndesRanking(unContacto.rank)
             };
             switch (unContacto.system) {
                 case 'phone':
