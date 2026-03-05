@@ -10,6 +10,7 @@ import {
     AndesContactoOrg,
     AndesDireccionOrg
 } from '../types/andes/organization.types';
+import { mapAndesRankingToFhirRank } from '../utils/rankingMapping';
 
 /**
  * Encode an ANDES Organization to FHIR Organization
@@ -23,25 +24,25 @@ export function encode(organization: AndesOrganization | null | undefined): Orga
 
     if (data.codigo?.sisa) {
         identificadores.push({
-            system: 'andes.gob.ar/sisa',
+            system: 'https://andes.gob.ar/sisa',
             value: data.codigo.sisa
         });
     }
     if (data.codigo?.cuie) {
         identificadores.push({
-            system: 'andes.gob.ar/cuie',
+            system: 'https://andes.gob.ar/cuie',
             value: data.codigo.cuie
         });
     }
     if (data.codigo?.remediar) {
         identificadores.push({
-            system: 'andes.gob.ar/remediar',
+            system: 'https://andes.gob.ar/remediar',
             value: data.codigo.remediar
         });
     }
     if (data.codigo?.sips) {
         identificadores.push({
-            system: 'andes.gob.ar/sips',
+            system: 'https://andes.gob.ar/sips',
             value: data.codigo.sips
         });
     }
@@ -56,7 +57,7 @@ export function encode(organization: AndesOrganization | null | undefined): Orga
         .map((item: AndesContactoOrg): ContactPoint => {
             const cp: ContactPoint = {
                 value: item.valor,
-                rank: item.ranking
+                rank: mapAndesRankingToFhirRank(item.ranking)
             };
             switch (item.tipo) {
                 case 'fijo':
