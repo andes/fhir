@@ -13,6 +13,7 @@ import {
     AndesDireccion,
     AndesRelacion
 } from '../types/andes/patient.types';
+import { mapAndesRankingToFhirRank, mapFhirRankToAndesRanking } from '../utils/rankingMapping';
 
 /**
  * Helpers
@@ -117,19 +118,6 @@ function mapEstadoCivilFHIRToAndes(estadoCivil?: string): string {
             return 'otro';
     }
 }
-
-function mapAndesRankingToFhirRank(andesRanking?: number): number {
-    return typeof andesRanking === 'number' && Number.isInteger(andesRanking) && andesRanking >= 0
-        ? andesRanking + 1
-        : 1;
-}
-
-function mapFhirRankToAndesRanking(fhirRank?: number): number {
-    return typeof fhirRank === 'number' && Number.isInteger(fhirRank) && fhirRank > 0
-        ? fhirRank - 1
-        : 0;
-}
-
 
 /**
  * Encode a patient from ANDES to FHIR
