@@ -13,10 +13,8 @@ import {
     AndesFormacionPosgrado,
     AndesRelacion
 } from '../types/andes/practitioner.types';
+import { formatFHIRDateTime, formatFHIRDate } from '../utils/fhirDate';
 
-/**
- * Encode a practitioner from ANDES to FHIR
- */
 export function encode(practitioner: AndesPractitioner | null | undefined): Practitioner | null {
     const data = practitioner;
 
@@ -112,16 +110,24 @@ export function encode(practitioner: AndesPractitioner | null | undefined): Prac
             unaMatricula.code = {
                 coding: [{
                     system: 'http://www.saludneuquen.gob.ar/fiscalizacion.html',
-                    code: datosGrado.profesion.codigo,
+                    code: String(datosGrado.profesion.codigo ?? ''),
                     display: datosGrado.profesion.tipoDeFormacion
                 }],
-                text: ultima.matriculaNumero
+                text: String(ultima.matriculaNumero ?? '')
             };
 
-            unaMatricula.period = {
-                start: ultima.inicio ?? null,
-                end: ultima.fin ?? null
-            };
+            const start = formatFHIRDateTime(ultima.inicio);
+            const end = formatFHIRDateTime(ultima.fin);
+
+            if (start || end) {
+                unaMatricula.period = {};
+                if (start) {
+                    unaMatricula.period.start = start;
+                }
+                if (end) {
+                    unaMatricula.period.end = end;
+                }
+            }
         }
 
         return unaMatricula;
@@ -150,16 +156,24 @@ export function encode(practitioner: AndesPractitioner | null | undefined): Prac
             unaMatricula.code = {
                 coding: [{
                     system: 'http://www.saludneuquen.gob.ar/fiscalizacion.html',
-                    code: datosPosgrado.especialidad.codigo,
+                    code: String(datosPosgrado.especialidad.codigo ?? ''),
                     display: datosPosgrado.especialidad.tipo
                 }],
-                text: ultima.matriculaNumero
+                text: String(ultima.matriculaNumero ?? '')
             };
 
-            unaMatricula.period = {
-                start: ultima.inicio ?? null,
-                end: ultima.fin ?? null
-            };
+            const start = formatFHIRDateTime(ultima.inicio);
+            const end = formatFHIRDateTime(ultima.fin);
+
+            if (start || end) {
+                unaMatricula.period = {};
+                if (start) {
+                    unaMatricula.period.start = start;
+                }
+                if (end) {
+                    unaMatricula.period.end = end;
+                }
+            }
         }
 
         return unaMatricula;
@@ -199,7 +213,7 @@ export function encode(practitioner: AndesPractitioner | null | undefined): Prac
             given: data.nombre?.split(' ') ?? []
         }],
         gender: genero,
-        birthDate: data.fechaNacimiento,
+        birthDate: formatFHIRDate(data.fechaNacimiento),
     };
 
     if (contactos.length > 0) {
