@@ -14,6 +14,7 @@ import {
     AndesRelacion
 } from '../types/andes/practitioner.types';
 import { formatFHIRDateTime, formatFHIRDate } from '../utils/fhirDate';
+import { mapAndesRankingToFhirRank } from '../utils/rankingMapping';
 
 export function encode(practitioner: AndesPractitioner | null | undefined): Practitioner | null {
     const data = practitioner;
@@ -52,7 +53,7 @@ export function encode(practitioner: AndesPractitioner | null | undefined): Prac
     const contactos: ContactPoint[] = (data.contacto ?? []).map((unContacto: AndesContacto): ContactPoint => {
         const cont: ContactPoint = {
             value: unContacto.valor,
-            rank: unContacto.ranking
+            rank: mapAndesRankingToFhirRank(unContacto.ranking)
         };
 
         switch (unContacto.tipo) {
@@ -206,6 +207,7 @@ export function encode(practitioner: AndesPractitioner | null | undefined): Prac
     // -----------------------------
     const profesionalFHIR: Practitioner = {
         resourceType: 'Practitioner',
+        id: data._id,
         identifier: identificadores,
         active: data.habilitado ?? undefined,
         name: [{
