@@ -101,7 +101,7 @@ export function encode(practitioner: AndesPractitioner | null | undefined): Prac
             identifier: datosGrado.profesion.nombre
                 ? [{
                     system: 'https://www.saludneuquen.gob.ar/matriculacionGrado',
-                    value: datosGrado.profesion.nombre
+                    value: String(datosGrado.profesion.nombre ?? '')
                 }]
                 : []
         };
@@ -111,7 +111,7 @@ export function encode(practitioner: AndesPractitioner | null | undefined): Prac
                 coding: [{
                     system: 'http://www.saludneuquen.gob.ar/fiscalizacion.html',
                     code: String(datosGrado.profesion.codigo ?? ''),
-                    display: datosGrado.profesion.tipoDeFormacion
+                    display: String(datosGrado.profesion.tipoDeFormacion ?? '')
                 }],
                 text: String(ultima.matriculaNumero ?? '')
             };
@@ -147,7 +147,7 @@ export function encode(practitioner: AndesPractitioner | null | undefined): Prac
             identifier: datosPosgrado.especialidad.nombre
                 ? [{
                     system: 'https://www.saludneuquen.gob.ar/matriculacionEspecialidad/',
-                    value: datosPosgrado.especialidad.nombre
+                    value: String(datosPosgrado.especialidad.nombre ?? '')
                 }]
                 : []
         };
@@ -157,7 +157,7 @@ export function encode(practitioner: AndesPractitioner | null | undefined): Prac
                 coding: [{
                     system: 'http://www.saludneuquen.gob.ar/fiscalizacion.html',
                     code: String(datosPosgrado.especialidad.codigo ?? ''),
-                    display: datosPosgrado.especialidad.tipo
+                    display: String(datosPosgrado.especialidad.tipo ?? '')
                 }],
                 text: String(ultima.matriculaNumero ?? '')
             };
