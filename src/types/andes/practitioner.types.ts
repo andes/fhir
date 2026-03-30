@@ -56,8 +56,9 @@ export interface AndesProfesion {
 
 export interface AndesEspecialidad {
     nombre?: string;
-    codigo?: string;
-    tipo?: string;
+    codigo: {
+        sisa: string;
+    };
 }
 
 export interface AndesFormacionGrado {

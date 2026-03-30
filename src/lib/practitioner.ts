@@ -157,8 +157,8 @@ export function encode(practitioner: AndesPractitioner | null | undefined): Prac
             unaMatricula.code = {
                 coding: [{
                     system: 'http://www.saludneuquen.gob.ar/fiscalizacion.html',
-                    code: String(datosPosgrado.especialidad.codigo ?? ''),
-                    display: String(datosPosgrado.especialidad.tipo ?? '')
+                    code: String(datosPosgrado.especialidad.codigo.sisa ?? ''),
+                    display: String(datosPosgrado.especialidad.nombre ?? '')
                 }],
                 text: String(ultima.matriculaNumero ?? '')
             };
