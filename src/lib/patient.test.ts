@@ -1,6 +1,7 @@
 import * as patient from '../data/patient.json';
 import { decode, encode } from './patient';
 import { createPatient } from '../helpers/patientFactory';
+import { FhirIdentifierSystems } from '../constants/identifier-systems';
 
 const pacienteFhir = encode(patient)!;
 
@@ -84,18 +85,18 @@ describe('encode patient from ANDES to FHIR R4', () => {
         const paciente = createPatient({ tipoIdentificacion: 'dni extranjero', numeroIdentificacion: 'ABC123' });
         const fhir = encode(paciente);
         expect(fhir).not.toBeNull();
-        const id = fhir!.identifier?.find(t => t.system === 'andes.gob.ar/sid/foreign-id');
+        const id = fhir!.identifier?.find(t => t.system === FhirIdentifierSystems.FOREIGN_ID);
         expect(id?.value).toBe('ABC123');
-        expect(id?.system).toBe('andes.gob.ar/sid/foreign-id');
+        expect(id?.system).toBe('http://andes.gob.ar/sid/foreign-id');
     });
 
     it('Verifica pasaporte', () => {
         const paciente = createPatient({ tipoIdentificacion: 'pasaporte', numeroIdentificacion: 'ABC123CD' });
         const fhir = encode(paciente);
         expect(fhir).not.toBeNull();
-        const id = fhir!.identifier?.find(t => t.system === 'andes.gob.ar/sid/passport');
+        const id = fhir!.identifier?.find(t => t.system === FhirIdentifierSystems.PASSPORT);
         expect(id?.value).toBe('ABC123CD');
-        expect(id?.system).toBe('andes.gob.ar/sid/passport');
+        expect(id?.system).toBe('http://andes.gob.ar/sid/passport');
     });
 });
 

@@ -14,6 +14,7 @@ import {
     AndesRelacion
 } from '../types/andes/patient.types';
 import { mapAndesRankingToFhirRank, mapFhirRankToAndesRanking } from '../utils/rankingMapping';
+import { FhirIdentifierSystems } from '../constants/identifier-systems';
 
 /**
  * Helpers
@@ -138,14 +139,14 @@ export function encode(patient: AndesPatient | null | undefined): Patient | null
 
     if (patient.documento) {
         identificadores.push({
-            system: 'http://www.renaper.gob.ar/dni',
+            system: FhirIdentifierSystems.DNI,
             value: patient.documento
         });
     }
 
     if (patient.cuil) {
         identificadores.push({
-            system: 'http://www.renaper.gob.ar/cuil',
+            system: FhirIdentifierSystems.CUIL,
             value: patient.cuil
         });
     }
@@ -153,13 +154,13 @@ export function encode(patient: AndesPatient | null | undefined): Patient | null
     if (patient.numeroIdentificacion) {
         if (patient.tipoIdentificacion === 'dni extranjero') {
             identificadores.push({
-                system: 'andes.gob.ar/sid/foreign-id',
+                system: FhirIdentifierSystems.FOREIGN_ID,
                 value: patient.numeroIdentificacion
             });
         }
         if (patient.tipoIdentificacion === 'pasaporte') {
             identificadores.push({
-                system: 'andes.gob.ar/sid/passport',
+                system: FhirIdentifierSystems.PASSPORT,
                 value: patient.numeroIdentificacion
             });
         }
@@ -316,7 +317,7 @@ export function decode(patient: Patient): AndesPatient {
         return element?.value;
     }
 
-    const tiposIdentificacion = ['andes.gob.ar/sid/foreign-id', 'andes.gob.ar/sid/passport'];
+    const tiposIdentificacion = [FhirIdentifierSystems.FOREIGN_ID, FhirIdentifierSystems.PASSPORT];
     const tipoAndes = ['dni extranjero', 'pasaporte'];
     let tipoIdentificacion: string | undefined;
     let numeroIdentificacion: string | undefined;
@@ -343,7 +344,7 @@ export function decode(patient: Patient): AndesPatient {
 
     const pacienteAndes: AndesPatient = {
         id: getValue(patient.identifier, makeUrl('Patient')) ?? patient.id,
-        documento: getValue(patient.identifier, 'http://www.renaper.gob.ar/dni'),
+        documento: getValue(patient.identifier, FhirIdentifierSystems.DNI),
         tipoIdentificacion,
         numeroIdentificacion,
         nombre,
