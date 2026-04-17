@@ -11,6 +11,7 @@ import {
     AndesDireccionOrg
 } from '../types/andes/organization.types';
 import { mapAndesRankingToFhirRank } from '../utils/rankingMapping';
+import { FhirIdentifierSystems } from '../constants/identifier-systems';
 
 /**
  * Encode an ANDES Organization to FHIR Organization
@@ -24,25 +25,25 @@ export function encode(organization: AndesOrganization | null | undefined): Orga
 
     if (data.codigo?.sisa) {
         identificadores.push({
-            system: 'https://andes.gob.ar/sisa',
+            system: FhirIdentifierSystems.SISA,
             value: data.codigo.sisa
         });
     }
     if (data.codigo?.cuie) {
         identificadores.push({
-            system: 'https://andes.gob.ar/cuie',
+            system: FhirIdentifierSystems.CUIE,
             value: data.codigo.cuie
         });
     }
     if (data.codigo?.remediar) {
         identificadores.push({
-            system: 'https://andes.gob.ar/remediar',
+            system: FhirIdentifierSystems.REMEDIAR,
             value: data.codigo.remediar
         });
     }
     if (data.codigo?.sips) {
         identificadores.push({
-            system: 'https://andes.gob.ar/sips',
+            system: FhirIdentifierSystems.SIPS,
             value: data.codigo.sips
         });
     }

@@ -1,4 +1,6 @@
-let DOMINIO = 'andes.gob.ar';
+import { FhirIdentifierSystems } from "../constants/identifier-systems";
+
+let DOMINIO: string = FhirIdentifierSystems.ANDES_ID;
 
 export function initialize(config: { dominio: string }): void {
     DOMINIO = config.dominio;
@@ -20,5 +22,5 @@ export function makeUrl(resource: string, id?: string | null): string {
  * Reseteo explícito para tests
  */
 export function __reset(): void {
-    DOMINIO = 'andes.gob.ar';
+    DOMINIO = FhirIdentifierSystems.ANDES_ID;
 }

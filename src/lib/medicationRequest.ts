@@ -4,6 +4,7 @@
  */
 
 import moment from 'moment';
+import { FhirIdentifierSystems } from '../constants/identifier-systems';
 
 // Muy incompleto hay que mejorarlo mucho todavía
 
@@ -21,7 +22,7 @@ export function encode(patientReference: any, practitionerReference: any, medica
         identifier: [  // Ver bien que sería el array de identifiers
             {
                 use: 'official',
-                system: 'http://app.andes.gob.ar/prescriptions',  // Es el id de la prestación completa
+                system: FhirIdentifierSystems.PRESCRIPTIONS,  // Es el id de la prestación completa
                 value: data.registro.id
             }
         ],
