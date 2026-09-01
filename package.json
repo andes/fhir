@@ -2,7 +2,7 @@
     "name": "@andes/fhir",
     "version": "0.0.0-development",
     "engines": {
-        "node": ">=18.0.0"
+        "node": ">=22.0.0"
     },
     "engineStrict": true,
     "main": "dist/index.js",
@@ -21,22 +21,21 @@
         "release:prod:dry": "dotenv -e .env -- semantic-release --no-ci --branches master --dry-run"
     },
     "devDependencies": {
-        "@types/jest": "29.5.14",
-        "@types/node": "^18.19.0",
-        "@typescript-eslint/eslint-plugin": "^6.21.0",
-        "@typescript-eslint/parser": "^6.21.0",
+        "@types/jest": "^29.5.14",
+        "@types/node": "^22.0.0",
+        "@typescript-eslint/eslint-plugin": "^8.26.0",
+        "@typescript-eslint/parser": "^8.26.0",
         "dotenv-cli": "^11.0.0",
         "eslint": "^8.57.0",
-        "jest": "29.7.0",
+        "jest": "^29.7.0",
         "rimraf": "^5.0.7",
         "semantic-release": "^20.1.0",
-        "ts-jest": "29.2.5",
+        "ts-jest": "^29.2.5",
         "ts-node": "^10.9.2",
-        "typescript": "5.3.3"
+        "typescript": "^5.8.2"
     },
     "dependencies": {
-        "@types/fhir": "^0.0.41",
-        "moment": "2.29.4"
+        "@types/fhir": "^0.0.41"
     },
     "files": [
         "dist/**/*"
