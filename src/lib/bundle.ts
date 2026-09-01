@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { makeUrl } from './config';
 
 export function encode(ID: any, resources: any) {
@@ -6,7 +5,7 @@ export function encode(ID: any, resources: any) {
         resourceType: 'Bundle',
         id: ID,
         meta: {
-            lastUpdated: moment().format()
+            lastUpdated: new Date().toISOString()
         },
         language: 'es-AR',
         entry: resources,

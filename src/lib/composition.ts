@@ -1,7 +1,6 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import moment from 'moment';
 import { makeUrl } from './config';
 
 function getReference(url: any) {
@@ -11,7 +10,8 @@ function getReference(url: any) {
 }
 
 export function encode(ID: any, patientReference: any, custodianReference: any, deviceReference: any, medicationStatementReference: any, ImmunizationReferences: any, AllergyIntoleranceReferences: any, ConditionReferences: any) {
-    const now = moment();
+    const now = new Date();
+    const nowIso = now.toISOString();
     let Immunization: any = [];
     let conditions: any = [];
     let medications: any = [];
@@ -120,12 +120,12 @@ export function encode(ID: any, patientReference: any, custodianReference: any, 
                 }
             ]
         },
-        title: 'Resumen del paciente al ' + now.format('DD/MM/YYYY, HH:mm'),
+        title: 'Resumen del paciente al ' + now.toLocaleDateString('es-AR') + ', ' + now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }),
         identifier: {
             system: makeUrl('Composition'),
             value: ID
         },
-        date: now,
+        date: nowIso,
         // meta: {
         //     profile: [
         //         'http:\/\/hl7.org\/fhir\/uv\/ips\/StructureDefinition\/composition-uv-ips'
@@ -144,7 +144,7 @@ export function encode(ID: any, patientReference: any, custodianReference: any, 
         attester: [
             {
                 mode: 'legal',
-                time: now,
+                time: nowIso,
                 party: {
                     reference: custodianReference
                 }
