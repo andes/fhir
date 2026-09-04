@@ -1,7 +1,7 @@
 import * as patient from '../data/patient.json';
-import { decode, encode } from './patient';
+import { decode, encode } from '../../src/lib/patient';
 import { createPatient } from '../helpers/patientFactory';
-import { FhirIdentifierSystems } from '../constants/identifier-systems';
+import { FhirIdentifierSystems } from '../../src/constants/identifier-systems';
 
 const pacienteFhir = encode(patient)!;
 
