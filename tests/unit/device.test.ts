@@ -1,4 +1,4 @@
-import { encode } from './device';
+import { encode } from '../../src/lib/device';
 
 test('Device type 1', () => {
     expect(encode().id).toBe('device-01');

@@ -1,5 +1,5 @@
 import * as basePatient from '../data/patient.json';
-import { AndesPatient } from '../types/andes/patient.types';
+import { AndesPatient } from '../../src/types/andes/patient.types';
 
 export type PartialDeep<T> = {
     [K in keyof T]?: T[K] extends object ? PartialDeep<T[K]> : T[K];

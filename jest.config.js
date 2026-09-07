@@ -3,7 +3,7 @@ module.exports = {
     preset: 'ts-jest',
 
     roots: [
-        '<rootDir>/src'
+        '<rootDir>'
     ],
 
     testEnvironment: 'node',
@@ -15,8 +15,12 @@ module.exports = {
     moduleFileExtensions: ['ts', 'js', 'json'],
 
     testMatch: [
-        '**/__tests__/**/*.test.ts',
-        '**/?(*.)+(test).ts'
+        '**/tests/**/*.test.ts'
+    ],
+
+    collectCoverageFrom: [
+        'src/**/*.ts',
+        '!src/**/*.d.ts'
     ],
 
     // globals: {

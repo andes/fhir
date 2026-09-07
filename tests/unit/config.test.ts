@@ -1,4 +1,4 @@
-import { getDominio, makeUrl, initialize, __reset } from './config';
+import { getDominio, makeUrl, initialize, __reset } from '../../src/lib/config';
 
 beforeEach(() => {
     __reset(); // Resetea el dominio antes de cada test
