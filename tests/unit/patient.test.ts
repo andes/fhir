@@ -9,9 +9,9 @@ describe('encode patient from ANDES to FHIR R4', () => {
     test('Verify basic data', () => {
         expect(pacienteFhir.resourceType).toBe('Patient');
         const ident = pacienteFhir.identifier;
-        const id = ident?.find(t => t.system === 'http://www.renaper.gob.ar/dni');
+        const id = ident?.find(t => t.system === FhirIdentifierSystems.DNI);
         expect(id?.value).toBe('42910660');
-        expect(id?.system).toBe('http://www.renaper.gob.ar/dni');
+        expect(id?.system).toBe(FhirIdentifierSystems.DNI);
         expect(pacienteFhir.active).toBe(true);
         expect(pacienteFhir.name).toBeDefined();
         expect(pacienteFhir.name![0].use).toBe('official');
