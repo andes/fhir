@@ -20,7 +20,7 @@ export function encode(patientReference: any, medicationReference: any, prestaci
         },
         meta: {
             profile: [
-                'http://hl7.org/fhir/uv/ips/StructureDefinition/medication-ips'
+                'http://hl7.org/fhir/uv/ips/StructureDefinition/MedicationStatement-uv-ips'
             ]
         },
         // extension: null,

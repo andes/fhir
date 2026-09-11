@@ -78,19 +78,38 @@ export function encode(organization: AndesOrganization | null | undefined): Orga
     if (data.direccion) {
         const dir: AndesDireccionOrg = data.direccion;
 
-        direcciones.push({
-            postalCode: dir.codigoPostal ?? '',
-            line: [dir.valor],
-            city: dir.ubicacion?.localidad?.nombre ?? '',
-            state: dir.ubicacion?.provincia?.nombre ?? '',
-            country: dir.ubicacion?.pais?.nombre ?? ''
-        });
+        const address: Address = {};
+        const city = dir.ubicacion?.localidad?.nombre;
+        const state = dir.ubicacion?.provincia?.nombre;
+        const country = dir.ubicacion?.pais?.nombre;
+
+        if (dir.valor?.trim()) {
+            address.line = [dir.valor.trim()];
+        }
+        if (dir.codigoPostal && String(dir.codigoPostal).trim()) {
+            address.postalCode = String(dir.codigoPostal).trim();
+        }
+        if (city?.trim()) {
+            address.city = city.trim();
+        }
+        if (state?.trim()) {
+            address.state = state.trim();
+        }
+        if (country?.trim()) {
+            address.country = country.trim();
+        }
+
+        direcciones.push(address);
     }
 
     // Organización FHIR
     const organizacionFHIR: Organization = {
         resourceType: 'Organization',
         id: data._id ?? data.id,
+        text: {
+            status: 'generated',
+            div: `<div xmlns="http://www.w3.org/1999/xhtml"><p>${data.nombre || 'Organización'}</p></div>`
+        },
         identifier: identificadores,
         active: data.activo ?? undefined,
         name: data.nombre ?? undefined,

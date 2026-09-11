@@ -206,13 +206,25 @@ export function encode(patient: AndesPatient | null | undefined): Patient | null
                     ? unaDireccion.ubicacion.pais?.nombre
                     : unaDireccion.ubicacion.pais;
 
-            return {
-                postalCode: unaDireccion.codigoPostal ?? '',
-                line: [unaDireccion.valor],
-                city: city ?? '',
-                state: state ?? '',
-                country: country ?? ''
-            };
+            const address: Address = {};
+
+            if (unaDireccion.valor?.trim()) {
+                address.line = [unaDireccion.valor.trim()];
+            }
+            if (unaDireccion.codigoPostal && String(unaDireccion.codigoPostal).trim()) {
+                address.postalCode = String(unaDireccion.codigoPostal).trim();
+            }
+            if (city?.trim()) {
+                address.city = city.trim();
+            }
+            if (state?.trim()) {
+                address.state = state.trim();
+            }
+            if (country?.trim()) {
+                address.country = country.trim();
+            }
+
+            return address;
         });
 
     // Relaciones → contact
@@ -244,6 +256,10 @@ export function encode(patient: AndesPatient | null | undefined): Patient | null
     const pacienteFHIR: Patient = {
         resourceType: 'Patient',
         id: patient._id ?? patient.id,
+        text: {
+            status: 'generated',
+            div: `<div xmlns="http://www.w3.org/1999/xhtml"><p>${`${patient.nombre || ''} ${patient.apellido || ''}`.trim()}</p></div>`
+        },
         identifier: identificadores,
         active: patient.activo ?? undefined,
         name: [{

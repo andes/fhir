@@ -22,7 +22,23 @@ export function encode(patientReference: any, alergiaIntolerancia: any) {
             ]
         },
         meta: {
-            profile: ['http://hl7.org/fhir/uv/ips/StructureDefinition/allergyintolerance-uv-ips']
+            profile: ['http://hl7.org/fhir/uv/ips/StructureDefinition/AllergyIntolerance-uv-ips']
+        },
+        clinicalStatus: {
+            coding: [
+                {
+                    system: 'http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical',
+                    code: 'active'
+                }
+            ]
+        },
+        verificationStatus: {
+            coding: [
+                {
+                    system: 'http://terminology.hl7.org/CodeSystem/allergyintolerance-verification',
+                    code: 'confirmed'
+                }
+            ]
         },
         text: {
             status: 'generated',

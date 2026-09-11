@@ -17,77 +17,181 @@ export function encode(ID: any, patientReference: any, custodianReference: any, 
     let medications: any = [];
     let allergyIntolerance = [];
 
-    Immunization = [{
-        title: 'Vacunas',
-        text: {
-            status: 'generated',
-            div: '<div xmlns="http://www.w3.org/1999/xhtml">Sección referida a la vacunación del paciente </div>'
-        },
-        code: {
-            coding: [
-                {
-                    system: 'http://loinc.org',
-                    display: 'Immunization record',
-                    code: '60484-3'
-                }
-            ]
-        },
-        entry: ImmunizationReferences ? ImmunizationReferences.map(getReference) : []
-    }];
+    if (ImmunizationReferences && ImmunizationReferences.length > 0) {
+        Immunization = [{
+            title: 'Vacunas',
+            text: {
+                status: 'generated',
+                div: '<div xmlns="http://www.w3.org/1999/xhtml">Sección referida a la vacunación del paciente </div>'
+            },
+            code: {
+                coding: [
+                    {
+                        system: 'http://loinc.org',
+                        code: '60484-3'
+                    }
+                ]
+            },
+            entry: ImmunizationReferences.map(getReference)
+        }];
+    } else {
+        Immunization = [{
+            title: 'Vacunas',
+            text: {
+                status: 'generated',
+                div: '<div xmlns="http://www.w3.org/1999/xhtml">No hay vacunas registradas</div>'
+            },
+            code: {
+                coding: [
+                    {
+                        system: 'http://loinc.org',
+                        code: '60484-3'
+                    }
+                ]
+            },
+            emptyReason: {
+                coding: [
+                    {
+                        system: 'http://terminology.hl7.org/CodeSystem/list-empty-reason',
+                        code: 'nilknown',
+                        display: 'Nil Known'
+                    }
+                ]
+            }
+        }];
+    }
 
-    medications = [{
-        title: 'Medicamentos',
-        text: {
-            status: 'generated',
-            div: '<div xmlns="http://www.w3.org/1999/xhtml">Registro de medicamentos</div>'
-        },
-        code: {
-            coding: [
-                {
-                    system: 'http://loinc.org',
-                    display: 'Medication use',
-                    code: '10160-0'
-                }
-            ]
-        },
-        entry: medicationStatementReference ? medicationStatementReference.map(getReference) : [],
-    }];
+    if (medicationStatementReference && medicationStatementReference.length > 0) {
+        medications = [{
+            title: 'Medicamentos',
+            text: {
+                status: 'generated',
+                div: '<div xmlns="http://www.w3.org/1999/xhtml">Registro de medicamentos</div>'
+            },
+            code: {
+                coding: [
+                    {
+                        system: 'http://loinc.org',
+                        code: '10160-0'
+                    }
+                ]
+            },
+            entry: medicationStatementReference.map(getReference)
+        }];
+    } else {
+        medications = [{
+            title: 'Medicamentos',
+            text: {
+                status: 'generated',
+                div: '<div xmlns="http://www.w3.org/1999/xhtml">No hay medicamentos registrados</div>'
+            },
+            code: {
+                coding: [
+                    {
+                        system: 'http://loinc.org',
+                        code: '10160-0'
+                    }
+                ]
+            },
+            emptyReason: {
+                coding: [
+                    {
+                        system: 'http://terminology.hl7.org/CodeSystem/list-empty-reason',
+                        code: 'nilknown',
+                        display: 'Nil Known'
+                    }
+                ]
+            }
+        }];
+    }
 
-    allergyIntolerance = [{
-        title: 'Alergias o Intolerancias',
-        text: {
-            status: 'generated',
-            div: '<div xmlns="http://www.w3.org/1999/xhtml">Registro de Alergias</div>'
-        },
-        code: {
-            coding: [
-                {
-                    system: 'http://loinc.org',
-                    display: 'Allergies and/or adverse reactions',
-                    code: '48765-2'
-                }
-            ]
-        },
-        entry: AllergyIntoleranceReferences ? AllergyIntoleranceReferences.map(getReference) : [],
-    }];
+    if (AllergyIntoleranceReferences && AllergyIntoleranceReferences.length > 0) {
+        allergyIntolerance = [{
+            title: 'Alergias o Intolerancias',
+            text: {
+                status: 'generated',
+                div: '<div xmlns="http://www.w3.org/1999/xhtml">Registro de Alergias</div>'
+            },
+            code: {
+                coding: [
+                    {
+                        system: 'http://loinc.org',
+                        code: '48765-2'
+                    }
+                ]
+            },
+            entry: AllergyIntoleranceReferences.map(getReference)
+        }];
+    } else {
+        allergyIntolerance = [{
+            title: 'Alergias o Intolerancias',
+            text: {
+                status: 'generated',
+                div: '<div xmlns="http://www.w3.org/1999/xhtml">No hay registro de alergias</div>'
+            },
+            code: {
+                coding: [
+                    {
+                        system: 'http://loinc.org',
+                        code: '48765-2'
+                    }
+                ]
+            },
+            emptyReason: {
+                coding: [
+                    {
+                        system: 'http://terminology.hl7.org/CodeSystem/list-empty-reason',
+                        code: 'nilknown',
+                        display: 'Nil Known'
+                    }
+                ]
+            }
+        }];
+    }
 
-    conditions = [{
-        code: {
-            coding: [
-                {
-                    system: 'http://loinc.org',
-                    display: 'Problem list',
-                    code: '11450-4'
-                }
-            ]
-        },
-        entry: ConditionReferences ? ConditionReferences.map(getReference) : [],
-        title: 'Problemas activos',
-        text: {
-            status: 'generated',
-            div: '<div xmlns="http://www.w3.org/1999/xhtml">Lista de problemas activos (trastornos)</div>'
-        }
-    }];
+    if (ConditionReferences && ConditionReferences.length > 0) {
+        conditions = [{
+            code: {
+                coding: [
+                    {
+                        system: 'http://loinc.org',
+                        code: '11450-4'
+                    }
+                ]
+            },
+            entry: ConditionReferences.map(getReference),
+            title: 'Problemas activos',
+            text: {
+                status: 'generated',
+                div: '<div xmlns="http://www.w3.org/1999/xhtml">Lista de problemas activos (trastornos)</div>'
+            }
+        }];
+    } else {
+        conditions = [{
+            code: {
+                coding: [
+                    {
+                        system: 'http://loinc.org',
+                        code: '11450-4'
+                    }
+                ]
+            },
+            title: 'Problemas activos',
+            text: {
+                status: 'generated',
+                div: '<div xmlns="http://www.w3.org/1999/xhtml">No hay problemas activos registrados</div>'
+            },
+            emptyReason: {
+                coding: [
+                    {
+                        system: 'http://terminology.hl7.org/CodeSystem/list-empty-reason',
+                        code: 'nilknown',
+                        display: 'Nil Known'
+                    }
+                ]
+            }
+        }];
+    }
 
     return {
         id: ID,
@@ -104,10 +208,7 @@ export function encode(ID: any, patientReference: any, custodianReference: any, 
         resourceType: 'Composition',
         author: [
             {
-                identifier: {
-                    system: 'https://federador.msal.gob.ar/uri',
-                    value: deviceReference
-                }
+                reference: deviceReference
             }
         ],
         confidentiality: 'N',
@@ -115,7 +216,6 @@ export function encode(ID: any, patientReference: any, custodianReference: any, 
             coding: [
                 {
                     system: 'http://loinc.org',
-                    display: 'Patient Summary',
                     code: '60591-5'
                 }
             ]
@@ -126,20 +226,17 @@ export function encode(ID: any, patientReference: any, custodianReference: any, 
             value: ID
         },
         date: nowIso,
-        // meta: {
-        //     profile: [
-        //         'http:\/\/hl7.org\/fhir\/uv\/ips\/StructureDefinition\/composition-uv-ips'
-        //     ]
-        // },
+        meta: {
+            profile: [
+                'http://hl7.org/fhir/uv/ips/StructureDefinition/Composition-uv-ips'
+            ]
+        },
         text: {
             status: 'generated',
             div: '<div xmlns="http://www.w3.org/1999/xhtml">IPS Neuquen</div>'
         },
         custodian: {
-            identifier: {
-                system: 'https://federador.msal.gob.ar/uri',
-                value: custodianReference
-            }
+            reference: custodianReference
         },
         attester: [
             {

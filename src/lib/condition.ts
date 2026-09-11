@@ -6,14 +6,32 @@
 
 
 export function encode(patientReference: any, registro: any) {
-    return {
+    const estado = registro.valor?.estado;
+    let clinicalStatusCode = 'active';
+    if (estado === 'inactivo' || estado === 'inactive') {
+        clinicalStatusCode = 'inactive';
+    } else if (estado === 'resuelto' || estado === 'resolved') {
+        clinicalStatusCode = 'resolved';
+    }
+
+    const condition: any = {
+        resourceType: 'Condition',
         id: registro._id,
+        meta: {
+            profile: [
+                'http://hl7.org/fhir/uv/ips/StructureDefinition/Condition-uv-ips'
+            ]
+        },
         category: [
             {
                 coding: [
                     {
+                        system: 'http://terminology.hl7.org/CodeSystem/condition-category',
+                        code: 'problem-list-item',
+                        display: 'Problem List Item'
+                    },
+                    {
                         system: 'http://loinc.org',
-                        display: 'Problem',
                         code: '75326-9'
                     }
                 ]
@@ -22,42 +40,12 @@ export function encode(patientReference: any, registro: any) {
         subject: {
             reference: patientReference
         },
-        onsetDateTime: registro.createdAt.getFullYear(), // [TODO] No va solo el año
-        resourceType: 'Condition',
-        // Por el momento ponemos 'confirmed'
+        onsetDateTime: registro.createdAt ? new Date(registro.createdAt).toISOString() : new Date().toISOString(),
         verificationStatus: {
             coding: [
                 {
-                    system: 'http://terminology.hl7.org//CodeSystem//condition-ver-status',
+                    system: 'http://terminology.hl7.org/CodeSystem/condition-ver-status',
                     code: 'confirmed'
-                }
-            ]
-        },
-        code: {
-            coding: [
-                {
-                    code: registro.concepto.conceptId,
-                    system: 'http://snomed.info/sct',
-                    display: registro.concepto.fsn
-                }
-            ]
-        },
-        recordedDate: registro.createdAt,
-        meta: {
-            profile: [
-                'http://hl7.org/fhir/uv/ips/StructureDefinition/condition-uv-ips'
-            ]
-        },
-        text: {
-            status: 'generated',
-            div: `<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: Problema: </p><p>${registro.nombre}</p></div>`
-        },
-        severity: {  // [TODO] Sacar esto porque no lo tenemos todavía. No hay un campo de severidad.
-            coding: [
-                {
-                    system: 'http://loinc.org',
-                    display: 'Moderate',
-                    code: 'LA6751-7'
                 }
             ]
         },
@@ -65,15 +53,34 @@ export function encode(patientReference: any, registro: any) {
             coding: [
                 {
                     system: 'http://terminology.hl7.org/CodeSystem/condition-clinical',
-                    code: registro.valor.estado // [TODO]  Tenemos este dato.
-                },
-                {
-                    system: 'http://terminology.hl7.org/CodeSystem/evolution',
-                    // code: registro.valor.evolucion.replace('<p>','').replace('</p>','')  // [TODO]  Tenemos este dato.
-                    code: registro.valor.evolucion  // [TODO]  Tenemos este dato.
+                    code: clinicalStatusCode
                 }
             ]
+        },
+        code: {
+            coding: [
+                {
+                    system: 'http://snomed.info/sct',
+                    code: String(registro.concepto.conceptId)
+                }
+            ],
+            text: registro.concepto.term || registro.concepto.fsn
+        },
+        recordedDate: registro.createdAt ? new Date(registro.createdAt).toISOString() : undefined,
+        text: {
+            status: 'generated',
+            div: `<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: Problema: </p><p>${registro.nombre || registro.concepto?.term || ''}</p></div>`
         }
     };
+
+    if (registro.valor?.evolucion) {
+        condition.note = [
+            {
+                text: String(registro.valor.evolucion)
+            }
+        ];
+    }
+
+    return condition;
 }
 

@@ -8,6 +8,10 @@ export function encode() {
     return {
         resourceType: 'Device',
         id: 'device-01',
+        text: {
+            status: 'generated',
+            div: '<div xmlns="http://www.w3.org/1999/xhtml"><p>Sistema de Aplicaciones Neuquinas de Salud (ANDES)</p></div>'
+        },
         identifier: [
             {
                 system: makeUrl('Device'),
@@ -18,10 +22,10 @@ export function encode() {
             coding: [
                 {
                     system: 'http://snomed.info/sct',
-                    code: '462894001',
-                    display: 'software de aplicación de sistema de información de historias clínicas de pacientes (objeto físico)'
+                    code: '462894001'
                 }
-            ]
+            ],
+            text: 'software de aplicación de sistema de información de historias clínicas de pacientes (objeto físico)'
         },
         owner: {
             reference: 'http://argentina.gob.ar/salud/refes/14999912399913'

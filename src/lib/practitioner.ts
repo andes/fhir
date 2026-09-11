@@ -73,13 +73,28 @@ export function encode(practitioner: AndesPractitioner | null | undefined): Prac
     // Direcciones → address
     // -----------------------------
     const direcciones: Address[] = (data.domicilios ?? []).map((unDomicilio: AndesDomicilio): Address => {
-        return {
-            postalCode: unDomicilio.codigoPostal ?? '',
-            line: [unDomicilio.valor],
-            city: unDomicilio.ubicacion?.localidad?.nombre ?? '',
-            state: unDomicilio.ubicacion?.provincia?.nombre ?? '',
-            country: unDomicilio.ubicacion?.pais?.nombre ?? ''
-        };
+        const address: Address = {};
+        const city = unDomicilio.ubicacion?.localidad?.nombre;
+        const state = unDomicilio.ubicacion?.provincia?.nombre;
+        const country = unDomicilio.ubicacion?.pais?.nombre;
+
+        if (unDomicilio.valor?.trim()) {
+            address.line = [unDomicilio.valor.trim()];
+        }
+        if (unDomicilio.codigoPostal && String(unDomicilio.codigoPostal).trim()) {
+            address.postalCode = String(unDomicilio.codigoPostal).trim();
+        }
+        if (city?.trim()) {
+            address.city = city.trim();
+        }
+        if (state?.trim()) {
+            address.state = state.trim();
+        }
+        if (country?.trim()) {
+            address.country = country.trim();
+        }
+
+        return address;
     });
 
     // -----------------------------
