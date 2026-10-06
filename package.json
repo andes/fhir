@@ -1,5 +1,8 @@
 {
     "name": "@andes/fhir",
+    "publishConfig": {
+        "access": "public"
+    },
     "version": "0.0.0-development",
     "engines": {
         "node": ">=24.0.0"
