@@ -1,5 +1,6 @@
 # Archivos de configuración
 config.private.ts
+.env
 
 # Logs
 logs
@@ -16,6 +17,7 @@ logs
 # Javascript versioning
 !jest.config.js
 !swagger/static*/*.js
+!release.config.js
 
 # Dist
 dist

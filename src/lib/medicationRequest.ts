@@ -3,11 +3,11 @@
  * @param {} medicationRequest
  */
 
-import * as moment from 'moment';
+import { FhirIdentifierSystems } from '../constants/identifier-systems';
 
 // Muy incompleto hay que mejorarlo mucho todavía
 
-export function encode(patientReference, practitionerReference, medicationFHIR, data) {
+export function encode(patientReference: any, practitionerReference: any, medicationFHIR: any, data: any) {
     return {
         resourceType: 'MedicationRequest',
         id: data.registro._id, // id de la prescripción completa
@@ -21,7 +21,7 @@ export function encode(patientReference, practitionerReference, medicationFHIR, 
         identifier: [  // Ver bien que sería el array de identifiers
             {
                 use: 'official',
-                system: 'http://app.andes.gob.ar/prescriptions',  // Es el id de la prestación completa
+                system: FhirIdentifierSystems.PRESCRIPTIONS,  // Es el id de la prestación completa
                 value: data.registro.id
             }
         ],
@@ -50,7 +50,7 @@ export function encode(patientReference, practitionerReference, medicationFHIR, 
             reference: patientReference  // podría ser una reference a un group también
         },
         // encounter: Por ahora lo dejo pendiente. Podría ponerse una referencia a otra prestación o al informe del encuentro.
-        authoredOn: moment(data.registro.createdAt).format('YYYY-MM-DD'),
+        authoredOn: data.registro?.createdAt ? new Date(data.registro.createdAt).toISOString().slice(0, 10) : undefined,
         // requester & performer: pueden ser  Reference(Practitioner|PractitionerRole|Organization|Patient|Device|RelatedPerson|CareTeam)
         // por el momento vamos a tomar al profesional porque no tenemos otra info en la prestación
         requester: {
